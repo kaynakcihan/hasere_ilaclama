@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 // Dinamik API adresi belirleme (Telefondan yerel ağa bağlanırken sorun yaşamamak için)
-const API_URL = `http://${window.location.hostname}:5000`;
+const API_URL = 'https://hasere-ilaclama.onrender.com';
 
 // ==========================================
 // ÖZEL SVG İKON BİLEŞENLERİ (Bağımlılık azaltmak için)
