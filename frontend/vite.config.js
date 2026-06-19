@@ -7,9 +7,5 @@ export default defineConfig({
     port: 3000,
     host: true, // Mobil cihazlardan da IP üzerinden bağlanabilmek için
     watch: null, // Türkçe karakterli yollarda oluşan sonsuz döngü hatasını engellemek için
-  },
-  build: {
-    outDir: '../backend/public',
-    emptyOutDir: true, // Klasörü derleme öncesi temizler
   }
 });
