@@ -1,0 +1,5 @@
+{
+  "appId": "com.hasere.app",
+  "appName": "HasereApp",
+  "webDir": "../backend/public"
+}
