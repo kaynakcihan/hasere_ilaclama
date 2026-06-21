@@ -2539,9 +2539,9 @@ export default function App() {
       
       yerin_turu: 'İşyeri',
       yerin_turu_daire: '',
-      saat_baslangic: currentTimeStr,
-      saat_bitis: endTimeStr,
-      uygulama_alani: '100',
+      saat_baslangic: '',
+      saat_bitis: '',
+      uygulama_alani: '',
       yem_istasyonu_sayisi: '',
       
       uygulamalar_ve_gorusler: initialReport,
