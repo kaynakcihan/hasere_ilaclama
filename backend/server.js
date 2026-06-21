@@ -11,7 +11,8 @@ dotenv.config();
 
 const app = express();
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 const PORT = process.env.PORT || 5000;
@@ -302,13 +303,16 @@ async function sendEk1Email(customer, doc, host = 'localhost:5000') {
   // PDF Gövdesi (imzalar base64 doğrudan gösterilir)
   const pdfHtmlContent = getBaseHtmlTemplate(ekipImzaPdfHtml, musteriImzaPdfHtml);
 
-  // PDF Olustur (HTML şablonunun aynısı)
+  // PDF Olusturma (Vercel gibi ortamlarda Puppeteer cokme yapabilecegi icin simdilik sadece HTML mail gonderilecek)
+  // PDF indirebilmeleri icin zaten mail icerisinde 'PDF Indir' butonu var.
   let pdfBuffer = null;
+  /*
   try {
     pdfBuffer = await generateEk1PdfBuffer(pdfHtmlContent);
   } catch (pdfErr) {
     console.error('E-posta icin PDF olusturma hatasi:', pdfErr.message);
   }
+  */
 
   const mailOptions = {
     from: '"Körfez İlaçlama" <' + process.env.SMTP_EMAIL + '>',
