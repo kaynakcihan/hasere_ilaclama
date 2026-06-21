@@ -1232,6 +1232,9 @@ app.post('/api/pest/visits', auth, async (req, res) => {
 // Catch-all
 app.get('*', (req, res) => { res.sendFile(path.join(__dirname, 'public', 'index.html')); });
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log('Sunucu http://localhost:' + PORT + ' adresinde calisiyor.');
-});
+if (require.main === module) {
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log('Sunucu http://localhost:' + PORT + ' adresinde calisiyor.');
+  });
+}
+module.exports = app;
