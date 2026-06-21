@@ -3294,7 +3294,7 @@ export default function App() {
 
                       {app.notes && (
                         <div style={{ background: 'rgba(0,0,0,0.15)', padding: '10px 14px', borderRadius: '12px', fontSize: '0.8rem', color: '#CBD5E1', marginBottom: '12px', borderLeft: '3px solid var(--accent)' }}>
-                          şÖ{app.notes}
+                          {app.notes}
                         </div>
                       )}
 
