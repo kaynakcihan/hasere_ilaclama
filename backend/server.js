@@ -678,6 +678,10 @@ app.post('/api/ek1', auth, async (req, res) => {
     
     // Müşteriye otomatik e-posta gönderimini tetikle
     const customer = await db.getCustomerById(customerId);
+    
+    let emailStatus = 'skipped';
+    let emailError = null;
+
     if (customer) {
       const emailToUse = documentData.customer_email || customer.email;
       if (documentData.customer_email && documentData.customer_email !== customer.email) {
@@ -685,8 +689,6 @@ app.post('/api/ek1', auth, async (req, res) => {
         await db.updateCustomerEmail(customerId, documentData.customer_email);
         customer.email = documentData.customer_email;
       }
-      let emailStatus = 'skipped';
-      let emailError = null;
 
       if (customer.email) {
         try {
