@@ -964,6 +964,7 @@ export default function App() {
 
   // Giriş Formu (Google olana kadar kolay test için)
   const [emailInput, setEmailInput] = useState(''); // Varsayılan kolay test e-postası kaldırıldı, placeholder kullanılıyor
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   // Form Alanları (Müşteri Ekleme/Düzenleme)
   const [formData, setFormData] = useState({
@@ -2330,6 +2331,7 @@ export default function App() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
+    setIsLoggingIn(true);
     
     try {
       const response = await fetch(`${API_URL}/api/auth/google-login`, {
@@ -2352,6 +2354,8 @@ export default function App() {
       setSuccess('Başarıyla giriş yapıldı!');
     } catch (err) {
       setError(err.message);
+    } finally {
+      setIsLoggingIn(false);
     }
   };
 
@@ -2644,8 +2648,8 @@ export default function App() {
               />
             </div>
             
-            <button type="submit" className="btn btn-primary" style={{ marginBottom: '15px' }}>
-              Giriş Yap (Test)
+            <button type="submit" className="btn btn-primary" style={{ marginBottom: '15px' }} disabled={isLoggingIn}>
+              {isLoggingIn ? 'Sunucu Uyanıyor, Lütfen Bekleyin... ⏳' : 'Giriş Yap'}
             </button>
           </form>
 
