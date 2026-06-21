@@ -407,7 +407,7 @@ const db = {
                   if (product.stock <= crit) {
                     await db.addNotification(
                       'Kritik Stok Uyarısı',
-                      \`\${product.commercialName} stoku kritik seviyenin altina düştü! (Kalan: \${product.stock} \${product.unit || ''}). Lütfen sipariş veriniz.\`,
+                      `${product.commercialName} stoku kritik seviyenin altina düştü! (Kalan: ${product.stock} ${product.unit || ''}). Lütfen sipariş veriniz.`,
                       'warning'
                     );
                   }
@@ -576,7 +576,7 @@ const db = {
     if (product.stock <= crit) {
       await db.addNotification(
         'Kritik Stok Uyarısı',
-        \`\${product.commercialName} stoku kritik seviyenin altina düştü! (Kalan: \${product.stock} \${product.unit || ''}). Lütfen sipariş veriniz.\`,
+        `${product.commercialName} stoku kritik seviyenin altina düştü! (Kalan: ${product.stock} ${product.unit || ''}). Lütfen sipariş veriniz.`,
         'warning'
       );
     }
