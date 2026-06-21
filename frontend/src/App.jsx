@@ -3362,12 +3362,23 @@ export default function App() {
                     <div className="job-card-actions" style={{ marginTop: '10px', paddingTop: '10px', display: 'flex', gap: '5px' }}>
                       {app.status === 'pending' ? (
                         <>
-                          <button 
-                            className="btn-small btn-action-success"
-                            onClick={() => openEk1ModalHelper(app)}
-                          >
-                            <IconFileText /> EK-1 Gönder
-                          </button>
+                          {app.date > new Date().toISOString().split('T')[0] ? (
+                            <button 
+                              className="btn-small btn-action-success"
+                              style={{ opacity: 0.6, cursor: 'not-allowed', background: '#94a3b8' }}
+                              title="İşin tarihi gelmeden (o gün gelmeden) resmi evrak doldurulamaz."
+                              disabled
+                            >
+                              🔒 Tarihi Bekleniyor
+                            </button>
+                          ) : (
+                            <button 
+                              className="btn-small btn-action-success"
+                              onClick={() => openEk1ModalHelper(app)}
+                            >
+                              <IconFileText /> EK-1 Gönder
+                            </button>
+                          )}
                           
                           <button 
                             className="btn-small btn-action-warning"
