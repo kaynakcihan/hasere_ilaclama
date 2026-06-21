@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 // Dinamik API adresi belirleme (Telefondan yerel ağa bağlanırken sorun yaşamamak için)
 const API_URL = 'https://hasere-ilaclama.onrender.com';
@@ -3217,20 +3217,24 @@ export default function App() {
                 ))}
               </div>
               
-              <div className="calendar-picker-wrapper" title="Başka Tarih Seç">
-                <button 
-                  className="calendar-picker-btn"
-                  onClick={() => document.getElementById('hidden-date-picker')?.showPicker()}
-                >
+              <div className="calendar-picker-wrapper" title="Başka Tarih Seç" style={{ position: 'relative', overflow: 'hidden' }}>
+                <button className="calendar-picker-btn">
                   <IconCalendar />
                 </button>
                 <input 
                   id="hidden-date-picker"
                   type="date" 
-                  className="calendar-hidden-input"
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
-                  style={{ visibility: 'hidden', position: 'absolute', pointerEvents: 'none' }}
+                  style={{ 
+                    position: 'absolute', 
+                    top: 0, 
+                    left: 0, 
+                    width: '100%', 
+                    height: '100%', 
+                    opacity: 0, 
+                    cursor: 'pointer' 
+                  }}
                 />
               </div>
             </div>
