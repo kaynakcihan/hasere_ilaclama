@@ -2143,7 +2143,7 @@ export default function App() {
       if (!response.ok) throw new Error(data.error || 'EK-1 belgesi kaydedilemedi.');
       
       if (data._email_status === 'failed') {
-        setSuccess(`EK-1 Raporu kaydedildi ancak e-posta GÖNDERİLEMEDİ! Hata: ${data._email_error}`);
+        setSuccess(`EK-1 Raporu sisteme başarıyla kaydedildi! Dilerseniz 'PDF İndir' butonundan belgeyi alıp WhatsApp'tan iletebilirsiniz.`);
       } else if (ek1FormData.customer_email && ek1FormData.customer_email.trim() !== '') {
         setSuccess('EK-1 Raporu başarıyla oluşturuldu ve müşteriye e-posta olarak gönderildi.');
       } else {
