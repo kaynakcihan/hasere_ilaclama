@@ -20,11 +20,16 @@ const JWT_SECRET = process.env.JWT_SECRET || 'korfez_ilaclama_jwt_secret_2024';
 
 // Gmail SMTP Transporter
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.SMTP_EMAIL,
     pass: process.env.SMTP_PASSWORD
-  }
+  },
+  connectionTimeout: 5000,
+  greetingTimeout: 5000,
+  socketTimeout: 5000
 });
 
 // 6 haneli rastgele kod uret
