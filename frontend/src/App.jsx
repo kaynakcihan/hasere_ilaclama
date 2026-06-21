@@ -1013,7 +1013,7 @@ export default function App() {
   const [selectedAppForReschedule, setSelectedAppForReschedule] = useState(null);
   const [rescheduleDate, setRescheduleDate] = useState('');
   const [rescheduleTime, setRescheduleTime] = useState('12:00');
-  const [rescheduleReason, setRescheduleReason] = useState('🌧️ Hava Muhalefeti (Yağmur/Rüzgar)');
+  const [rescheduleReason, setRescheduleReason] = useState('Hava Muhalefeti (Yağmur/Rüzgar)');
 
   // EK-1 Form Modalı State
   const [showEk1Modal, setShowEk1Modal] = useState(false);
@@ -3055,7 +3055,7 @@ export default function App() {
                                       setSelectedAppForReschedule(app);
                                       setRescheduleDate(app.date);
                                       setRescheduleTime(app.time || '12:00');
-                                      setRescheduleReason('🌧️ Hava Muhalefeti (Yağmur/Rüzgar)');
+                                      setRescheduleReason('Hava Muhalefeti (Yağmur/Rüzgar)');
                                       setShowRescheduleModal(true);
                                     }}
                                   >
@@ -3331,7 +3331,7 @@ export default function App() {
                               setSelectedAppForReschedule(app);
                               setRescheduleDate(selectedDate);
                               setRescheduleTime(app.time || '12:00');
-                              setRescheduleReason('🌧️ Hava Muhalefeti (Yağmur/Rüzgar)');
+                              setRescheduleReason('Hava Muhalefeti (Yağmur/Rüzgar)');
                               setShowRescheduleModal(true);
                             }}
                           >
@@ -4080,12 +4080,7 @@ export default function App() {
               <div className="input-group">
                 <label className="input-label">Hızlı Erteleme Nedeni Seçin</label>
                 <div className="quick-reasons-grid">
-                  {[
-                    '🌧️ Hava Muhalefeti (Yağmur/Rüzgar)',
-                    'şMüşteri Talebi / Kapalı',
-                    '⏰ Zaman Yetersizliği',
-                    'şÖTeknik / Cihaz Arızası'
-                  ].map(reason => (
+                  {['Hava Muhalefeti (Yağmur/Rüzgar)', 'Müşteri Talebi / Mekan Kapalı', 'Zaman Yetersizliği', 'Teknik / Cihaz Arızası'].map(reason => (
                     <button
                       key={reason}
                       type="button"
