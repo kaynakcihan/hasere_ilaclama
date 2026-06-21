@@ -981,6 +981,19 @@ app.delete('/api/ek1/products/:id', auth, adminOnly, async (req, res) => {
   }
 });
 
+app.post('/api/ek1/products/:id/adjust-stock', auth, adminOnly, async (req, res) => {
+  try {
+    const { amount } = req.body;
+    if (amount === undefined) return res.status(400).json({ error: 'Miktar belirtilmedi.' });
+    const product = await db.adjustProductStock(req.params.id, amount);
+    if (!product) return res.status(404).json({ error: 'İlaç bulunamadı.' });
+    res.json({ message: 'Stok güncellendi.', product });
+  } catch (e) {
+    console.error('Stok guncelleme hatasi:', e);
+    res.status(500).json({ error: 'Stok güncellenemedi.' });
+  }
+});
+
 
 // === HAŞERE KÜTÜPHANESİ ===
 app.get('/api/pests', auth, async (req, res) => {
@@ -999,7 +1012,7 @@ app.post('/api/pests', auth, adminOnly, async (req, res) => {
     const p = await db.addPest(name, type);
     res.status(201).json(p);
   } catch (e) {
-    res.status(500).json({ error: 'Haşere eklenemedi.' });
+    res.status(500).json({ error: 'Haşere eklenemedi: ' + e.message });
   }
 });
 

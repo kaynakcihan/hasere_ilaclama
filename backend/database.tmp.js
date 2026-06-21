@@ -384,42 +384,6 @@ const db = {
     };
     
     d.ek1_documents.push(doc);
-
-    // Stok Düşüm Algoritması
-    if (doc.secili_urunler) {
-      try {
-        let urunler = doc.secili_urunler;
-        if (typeof urunler === 'string') urunler = JSON.parse(urunler);
-        if (Array.isArray(urunler) && d.ek1_products) {
-          for (const u of urunler) {
-            if (u.commercialName) {
-              const productIndex = d.ek1_products.findIndex(p => p.commercialName === u.commercialName);
-              if (productIndex !== -1) {
-                const qtyStr = u.defaultQuantity || "0";
-                const numMatch = qtyStr.match(/\\d+/);
-                const usedAmount = numMatch ? parseFloat(numMatch[0]) : 0;
-                
-                if (usedAmount > 0) {
-                  const product = d.ek1_products[productIndex];
-                  product.stock = (product.stock || 0) - usedAmount;
-                  
-                  const crit = product.criticalStock || 10;
-                  if (product.stock <= crit) {
-                    await db.addNotification(
-                      'Kritik Stok Uyarısı',
-                      \`\${product.commercialName} stoku kritik seviyenin altina düştü! (Kalan: \${product.stock} \${product.unit || ''}). Lütfen sipariş veriniz.\`,
-                      'warning'
-                    );
-                  }
-                }
-              }
-            }
-          }
-        }
-      } catch (err) {
-        console.error('Stok dusum hatasi:', err);
-      }
-    }
     
     let appInfo = {};
     if (appointmentId) {
@@ -534,9 +498,6 @@ const db = {
       activeIngredient: productData.activeIngredient || '',
       antidote: productData.antidote || 'Semptomatik Tedavi',
       defaultQuantity: productData.defaultQuantity || '10 gr',
-      stock: Number(productData.stock) || 0,
-      unit: productData.unit || 'Birim',
-      criticalStock: Number(productData.criticalStock) || 10,
       created_at: new Date().toISOString()
     };
     d.ek1_products.push(p);
@@ -561,28 +522,6 @@ const db = {
     d.ek1_products = d.ek1_products.filter(p => p.id !== parseInt(id));
     await saveData(d);
     return d.ek1_products.length < initialLength;
-  },
-
-  adjustProductStock: async (id, amount) => {
-    const d = await loadData();
-    if (!d.ek1_products) return null;
-    const idx = d.ek1_products.findIndex(p => p.id === parseInt(id));
-    if (idx === -1) throw new Error('İlaç bulunamadı');
-    
-    d.ek1_products[idx].stock = (d.ek1_products[idx].stock || 0) + parseFloat(amount);
-    
-    const product = d.ek1_products[idx];
-    const crit = product.criticalStock || 10;
-    if (product.stock <= crit) {
-      await db.addNotification(
-        'Kritik Stok Uyarısı',
-        \`\${product.commercialName} stoku kritik seviyenin altina düştü! (Kalan: \${product.stock} \${product.unit || ''}). Lütfen sipariş veriniz.\`,
-        'warning'
-      );
-    }
-    
-    await saveData(d);
-    return product;
   },
 
   getMonthlyWorkDoneReport: async () => {
