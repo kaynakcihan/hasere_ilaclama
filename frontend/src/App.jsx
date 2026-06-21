@@ -963,7 +963,7 @@ export default function App() {
   }, []);
 
   // Giriş Formu (Google olana kadar kolay test için)
-  const [emailInput, setEmailInput] = useState('admin@example.com'); // Varsayılan kolay test e-postası
+  const [emailInput, setEmailInput] = useState(''); // Varsayılan kolay test e-postası kaldırıldı, placeholder kullanılıyor
 
   // Form Alanları (Müşteri Ekleme/Düzenleme)
   const [formData, setFormData] = useState({
