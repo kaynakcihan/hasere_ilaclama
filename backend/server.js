@@ -678,11 +678,12 @@ app.post('/api/ek1', auth, async (req, res) => {
         customer.email = documentData.customer_email;
       }
       if (customer.email) {
-        sendEk1Email(customer, doc, req.headers.host).then(() => {
+        try {
+          await sendEk1Email(customer, doc, req.headers.host);
           console.log(`EK-1 e-postası başarıyla gönderildi: ${customer.email}`);
-        }).catch(mailErr => {
+        } catch (mailErr) {
           console.error('EK-1 e-postası gönderilemedi:', mailErr.message);
-        });
+        }
       }
     }
 
