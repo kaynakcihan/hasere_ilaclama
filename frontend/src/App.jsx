@@ -4094,7 +4094,7 @@ export default function App() {
               </div>
 
               <div className="input-group">
-                <label className="input-label">Açıklama / Öözel Not</label>
+                <label className="input-label">Açıklama / Özel Not</label>
                 <textarea 
                   className="form-input" 
                   rows="2"
@@ -4571,7 +4571,7 @@ export default function App() {
                             transition: 'all 0.2s ease'
                           }}
                         >
-                          şÖKütüphaneye ve Rapora Ekle
+                          Kütüphaneye ve Rapora Ekle
                         </button>
                       </div>
                     </div>
@@ -4740,7 +4740,7 @@ export default function App() {
                   </div>
 
                   <div className="input-group" style={{ marginTop: '15px' }}>
-                    <label className="input-label" style={{ color: '#F59E0B', fontWeight: 'bold' }}>şMüşteri E-posta Adresi (EK-1 Belgesi Buraya Gönderilecek) *</label>
+                    <label className="input-label" style={{ color: '#F59E0B', fontWeight: 'bold' }}>Müşteri E-posta Adresi (EK-1 Belgesi Buraya Gönderilecek) *</label>
                     <input 
                       type="email" 
                       required 
@@ -4751,7 +4751,7 @@ export default function App() {
                       onChange={(e) => setEk1FormData({ ...ek1FormData, customer_email: e.target.value })}
                     />
                     <div style={{ fontSize: '0.7rem', color: '#94A3B8', marginTop: '4px' }}>
-                      * Müşterinin e-postası boxşsa buraya girin. Girilen e-posta müşterinin kartına da otomatik kaydedilecektir.
+                      * Müşterinin e-postası boşsa buraya girin. Girilen e-posta müşterinin kartına da otomatik kaydedilecektir.
                     </div>
                   </div>
                 </div>
@@ -4784,7 +4784,7 @@ export default function App() {
                 {/* 5. GÜVENLİİK ÖNLEMLERİ VE YAPILAN ÖNERİLER */}
                 <div style={{ borderBottom: '1px solid #334155', paddingBottom: '15px', marginBottom: '15px' }}>
                   <h4 style={{ color: 'var(--accent)', margin: '0 0 10px 0', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                    5. Güvenlik Önlemleri ve Ööneriler *
+                    5. Güvenlik Önlemleri ve Öneriler *
                   </h4>
                   <textarea 
                     className="form-input" 
@@ -4908,7 +4908,7 @@ export default function App() {
                 <label className="input-label">Müşteri Seçin *</label>
                 {customers.length === 0 ? (
                   <div style={{ color: '#F59E0B', fontSize: '0.85rem', marginTop: '5px' }}>
-                    çağ️ Sistemde kayıtlı müşteri bulunamadı. Lütfen önce "Müşteriler" sekmesinden yeni bir müşteri ekleyin.
+                    Sistemde kayıtlı müşteri bulunamadı. Lütfen önce "Müşteriler" sekmesinden yeni bir müşteri ekleyin.
                   </div>
                 ) : (
                   <select 
@@ -5161,7 +5161,7 @@ export default function App() {
                   className="btn btn-secondary" 
                   style={{ width: 'auto', padding: '10px 20px', fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}
                 >
-                  şÖPDF İndir
+                  PDF İndir
                 </a>
                 <a 
                   href={waUrl} 
@@ -5170,7 +5170,7 @@ export default function App() {
                   className="btn btn-primary"
                   style={{ width: 'auto', padding: '10px 20px', fontSize: '0.85rem', background: '#25D366', color: '#fff', border: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}
                 >
-                  şMüşteriye WhatsApp'tan Gönder
+                  Müşteriye WhatsApp'tan Gönder
                 </a>
                 <button 
                   className="btn btn-secondary" 
@@ -5201,7 +5201,7 @@ export default function App() {
                   </div>
                   <div className="ek1-grid-2col">
                     <div className="ek1-grid-cell">
-                      Firma Ticari ÜÜnvanıı:<br/><strong>Körfez Danışmanlık İlaçlama Hizmetleri Ltd. Şti.</strong>
+                      Firma Ticari Unvanı:<br/><strong>Körfez Danışmanlık İlaçlama Hizmetleri Ltd. Şti.</strong>
                     </div>
                     <div className="ek1-grid-cell">
                       Mesul Müdür:<br/><strong>{viewingEk1Doc.mesul_mudur || 'Sadun Güneş'}</strong>
@@ -5375,9 +5375,9 @@ export default function App() {
                 >
                   <option value="🚗 Araç Yakıt / Benzin">🚗 Araç Yakıt / Benzin</option>
                   <option value="📄 Ekipman / Cihaz ve Malzeme">📄 Ekipman / Cihaz ve Malzeme</option>
-                  <option value="şa Araç Bakım / Yedek Parça">şa Araç Bakım / Yedek Parça</option>
+                  <option value="Araç Bakım / Yedek Parça">Araç Bakım / Yedek Parça</option>
                   <option value="a Muhasebe / Resmi ÖÖdemeler ve Vergiler">a Muhasebe / Resmi ÖÖdemeler ve Vergiler</option>
-                  <option value="şÖOfis Giderleri ve Genel İhtiyaçlar">şÖOfis Giderleri ve Genel İhtiyaçlar</option>
+                  <option value="Ofis Giderleri ve Genel İhtiyaçlar">Ofis Giderleri ve Genel İhtiyaçlar</option>
                   <option value="Diğer (Dinamik Açıklamalı)">➕ Diğer (Dinamik Açıklamalı)</option>
                 </select>
               </div>
