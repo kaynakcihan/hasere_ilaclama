@@ -1059,6 +1059,7 @@ export default function App() {
   const [showEditPestModal, setShowEditPestModal] = useState(false);
   const [editingPest, setEditingPest] = useState(null);
   const [newPestNameInput, setNewPestNameInput] = useState('');
+  const [newPestTypeInput, setNewPestTypeInput] = useState('');
 
   // İlaç Kütüphanesi ve Aylık Raporlama State Alanları
   const [ek1Products, setEk1Products] = useState([]);
@@ -3673,6 +3674,7 @@ export default function App() {
                       <thead>
                         <tr>
                           <th style={{ padding: '10px', textAlign: 'left', borderBottom: '2px solid #334155' }}>Haşere Adı</th>
+                          <th style={{ padding: '10px', textAlign: 'left', borderBottom: '2px solid #334155' }}>Türü</th>
                           {user.role === 'admin' && <th style={{ padding: '10px', textAlign: 'right', borderBottom: '2px solid #334155' }}>İşlemler</th>}
                         </tr>
                       </thead>
@@ -3680,6 +3682,7 @@ export default function App() {
                         {pests.map(p => (
                           <tr key={p.id} style={{ borderBottom: '1px solid #334155', transition: 'background 0.2s' }}>
                             <td style={{ padding: '10px', fontWeight: 'bold', color: '#F8FAFC' }}>{p.name}</td>
+                            <td style={{ padding: '10px', color: '#94A3B8' }}>{p.type || '-'}</td>
                             {user.role === 'admin' && (
                               <td style={{ padding: '10px', textAlign: 'right', display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
                                 <button 
@@ -5675,6 +5678,13 @@ export default function App() {
                   value={newPestNameInput} onChange={(e) => setNewPestNameInput(e.target.value)} 
                 />
               </div>
+              <div className="input-group">
+                <label className="input-label">Haşere Türü (Örn: Kemirgen)</label>
+                <input 
+                  type="text" className="form-input" 
+                  value={newPestTypeInput} onChange={(e) => setNewPestTypeInput(e.target.value)} 
+                />
+              </div>
               <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '12px', marginTop: '10px' }}>
                 Kaydet
               </button>
@@ -5697,6 +5707,13 @@ export default function App() {
                 <input 
                   type="text" required className="form-input" 
                   value={editingPest.name} onChange={(e) => setEditingPest({...editingPest, name: e.target.value})} 
+                />
+              </div>
+              <div className="input-group">
+                <label className="input-label">Haşere Türü</label>
+                <input 
+                  type="text" className="form-input" 
+                  value={editingPest.type || ''} onChange={(e) => setEditingPest({...editingPest, type: e.target.value})} 
                 />
               </div>
               <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '12px', marginTop: '10px' }}>

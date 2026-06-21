@@ -26,14 +26,14 @@ const defaultData = {
   ek1_products: [],
   appointments: [],
   pests: [
-    { id: 1, name: 'Karınca' },
-    { id: 2, name: 'Karafatma' },
-    { id: 3, name: 'Hamam Böceği' },
-    { id: 4, name: 'Fare' },
-    { id: 5, name: 'Pire' },
-    { id: 6, name: 'Tahta Kurusu' },
-    { id: 7, name: 'Yılan' },
-    { id: 8, name: 'Akrep' }
+    { id: 1, name: 'Karınca', type: 'Yürüyen Haşere' },
+    { id: 2, name: 'Karafatma', type: 'Yürüyen Haşere' },
+    { id: 3, name: 'Hamam Böceği', type: 'Yürüyen Haşere' },
+    { id: 4, name: 'Fare', type: 'Kemirgen' },
+    { id: 5, name: 'Pire', type: 'Yürüyen Haşere' },
+    { id: 6, name: 'Tahta Kurusu', type: 'Yürüyen Haşere' },
+    { id: 7, name: 'Yılan', type: 'Sürüngen' },
+    { id: 8, name: 'Akrep', type: 'Yürüyen Haşere' }
   ],
   monthly_work_done: [],
   expenses: [],
@@ -810,21 +810,22 @@ const db = {
     const d = await loadData();
     return d.pests || [];
   },
-  addPest: async (name) => {
+  addPest: async (name, type) => {
     const d = await loadData();
     if (!d.pests) d.pests = [];
     const newId = d.pests.length > 0 ? Math.max(...d.pests.map(p => p.id)) + 1 : 1;
-    const p = { id: newId, name };
+    const p = { id: newId, name, type: type || '' };
     d.pests.push(p);
     await saveData(d);
     return p;
   },
-  updatePest: async (id, name) => {
+  updatePest: async (id, name, type) => {
     const d = await loadData();
     if (!d.pests) d.pests = [];
     const idx = d.pests.findIndex(p => p.id === parseInt(id));
     if (idx === -1) throw new Error('Haşere bulunamadı');
     d.pests[idx].name = name;
+    d.pests[idx].type = type || '';
     await saveData(d);
     return d.pests[idx];
   },

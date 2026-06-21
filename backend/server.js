@@ -993,10 +993,10 @@ app.get('/api/pests', auth, async (req, res) => {
 });
 
 app.post('/api/pests', auth, adminOnly, async (req, res) => {
-  const { name } = req.body;
+  const { name, type } = req.body;
   if (!name) return res.status(400).json({ error: 'Haşere adı gereklidir.' });
   try {
-    const p = await db.addPest(name);
+    const p = await db.addPest(name, type);
     res.status(201).json(p);
   } catch (e) {
     res.status(500).json({ error: 'Haşere eklenemedi.' });
@@ -1004,10 +1004,10 @@ app.post('/api/pests', auth, adminOnly, async (req, res) => {
 });
 
 app.put('/api/pests/:id', auth, adminOnly, async (req, res) => {
-  const { name } = req.body;
+  const { name, type } = req.body;
   if (!name) return res.status(400).json({ error: 'Haşere adı gereklidir.' });
   try {
-    const updated = await db.updatePest(req.params.id, name);
+    const updated = await db.updatePest(req.params.id, name, type);
     res.json(updated);
   } catch (e) {
     res.status(500).json({ error: 'Haşere güncellenemedi.' });
