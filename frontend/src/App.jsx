@@ -2679,9 +2679,10 @@ export default function App() {
     e.preventDefault();
     if (!editingProduct) return;
     try {
-      const response = await fetch(`${API_URL}/api/ek1/products/${editingProduct.id}`, {
+      const url = `${API_URL}/api/ek1/products/${editingProduct.id}`.trim();
+      const response = await fetch(url, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`.trim() },
         body: JSON.stringify(editingProduct)
       });
       const data = await response.json();
@@ -2689,16 +2690,17 @@ export default function App() {
       setSuccess('İlaç başarıyla güncellendi.');
       setShowEditProductModal(false);
       fetchEk1Products();
-    } catch (err) { setError(err.message); }
+    } catch (err) { setError(`Hata: ${err.name} - ${err.message}`); }
   };
 
   const handleAddPestSubmit = async (e) => {
     e.preventDefault();
     if (!newPestNameInput) return;
     try {
-      const response = await fetch(`${API_URL}/api/pests`, {
+      const url = `${API_URL}/api/pests`.trim();
+      const response = await fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`.trim() },
         body: JSON.stringify({ name: newPestNameInput, type: newPestTypeInput })
       });
       if (!response.ok) throw new Error('Haşere eklenemedi.');
@@ -2707,36 +2709,38 @@ export default function App() {
       setNewPestNameInput('');
       setNewPestTypeInput('');
       fetchPests();
-    } catch (err) { setError(err.message); }
+    } catch (err) { setError(`Hata: ${err.name} - ${err.message}`); }
   };
 
   const handleEditPestSubmit = async (e) => {
     e.preventDefault();
     if (!editingPest || !editingPest.name) return;
     try {
-      const response = await fetch(`${API_URL}/api/pests/${editingPest.id}`, {
+      const url = `${API_URL}/api/pests/${editingPest.id}`.trim();
+      const response = await fetch(url, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`.trim() },
         body: JSON.stringify({ name: editingPest.name, type: editingPest.type })
       });
       if (!response.ok) throw new Error('Haşere güncellenemedi.');
       setSuccess('Haşere güncellendi.');
       setShowEditPestModal(false);
       fetchPests();
-    } catch (err) { setError(err.message); }
+    } catch (err) { setError(`Hata: ${err.name} - ${err.message}`); }
   };
 
   const handleDeletePest = async (id) => {
     if (!window.confirm('Bu haşereyi kütüphaneden silmek istediğinize emin misiniz?')) return;
     try {
-      const response = await fetch(`${API_URL}/api/pests/${id}`, {
+      const url = `${API_URL}/api/pests/${id}`.trim();
+      const response = await fetch(url, {
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
+        headers: { 'Authorization': `Bearer ${token}`.trim() }
       });
       if (!response.ok) throw new Error('Haşere silinemedi.');
       setSuccess('Haşere başarıyla silindi.');
       fetchPests();
-    } catch (err) { setError(err.message); }
+    } catch (err) { setError(`Hata: ${err.name} - ${err.message}`); }
   };
 
   // Giriş Yapıldıysa ANA UYGULAMAYI göster
