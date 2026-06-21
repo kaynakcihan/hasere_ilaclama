@@ -3217,9 +3217,9 @@ export default function App() {
                 ))}
               </div>
               
-              <div className="calendar-picker-wrapper" title="Başka Tarih Seç" style={{ position: 'relative', overflow: 'hidden' }}>
-                <button className="calendar-picker-btn">
-                  <IconCalendar />
+              <div className="calendar-picker-wrapper" title="Başka Tarih Seç" style={{ position: 'relative', overflow: 'hidden', marginLeft: '10px' }}>
+                <button className="calendar-picker-btn" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 12px', background: 'var(--primary)', color: '#fff', borderRadius: '8px', border: 'none', fontWeight: 'bold' }}>
+                  <IconCalendar /> Tarih Seç 📅
                 </button>
                 <input 
                   id="hidden-date-picker"
