@@ -2613,7 +2613,7 @@ export default function App() {
               title="Bildirimler"
             >
               <IconBell />
-              {notifications.filter(n => !n.read_by_users?.includes(user?.id)).length > 0 && (
+              {notifications.filter(n => !n.is_read).length > 0 && (
                 <span style={{
                   position: 'absolute',
                   top: '-5px',
@@ -2630,7 +2630,7 @@ export default function App() {
                   fontWeight: 'bold',
                   border: '2px solid var(--bg-dark)'
                 }}>
-                  {notifications.filter(n => !n.read_by_users?.includes(user?.id)).length}
+                  {notifications.filter(n => !n.is_read).length}
                 </span>
               )}
             </button>
@@ -2655,7 +2655,7 @@ export default function App() {
               }}>
                 <div style={{ padding: '15px', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <h3 style={{ margin: 0, fontSize: '1rem', color: '#fff' }}>Bildirimler</h3>
-                  {notifications.filter(n => !n.read_by_users?.includes(user?.id)).length > 0 && (
+                  {notifications.filter(n => !n.is_read).length > 0 && (
                     <button 
                       onClick={markAllNotificationsAsRead}
                       style={{ background: 'transparent', border: 'none', color: 'var(--accent)', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 'bold' }}
