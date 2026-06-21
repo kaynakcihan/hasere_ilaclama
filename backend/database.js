@@ -729,6 +729,19 @@ const db = {
     return true;
   },
 
+  clearUserNotifications: async (userId) => {
+    const d = await loadData();
+    if (!d.notifications) return false;
+    const uId = parseInt(userId);
+    const initialLength = d.notifications.length;
+    d.notifications = d.notifications.filter(n => !n.read_by_users || !n.read_by_users.includes(uId));
+    if (d.notifications.length !== initialLength) {
+      await saveData(d);
+      return true;
+    }
+    return true; // Return true even if nothing to delete, to avoid failure
+  },
+
   markAllNotificationsAsRead: async (userId) => {
     const d = await loadData();
     if (!d.notifications) d.notifications = [];
