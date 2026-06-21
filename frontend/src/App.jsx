@@ -5182,14 +5182,11 @@ export default function App() {
         const urunlerStr = docProducts.map(p => p.commercialName).join(', ');
 
         // Compiling WhatsApp share message
-        const shareMessage = `Körfez İlaçlama - EK-1 Biyosidal Ürün Uygulama Belgesi\n` +
-          `Belge No: #EK1-${viewingEk1Doc.id}\n` +
-          `Uygulama Tarihi: ${new Date(viewingEk1Doc.created_at).toLocaleDateString('tr-TR')}\n` +
-          `Teknisyen: ${viewingEk1Doc.teknisyen_adi || 'Ömür Karabacak'}\n` +
-          `Kullanılan Ürün/ler: ${urunlerStr}\n` +
-          `Hedef Zararlı: ${pestsStr}\n` +
-          `Uygulama Alanı: ${viewingEk1Doc.uygulama_alani || '-'} M²\n` +
-          `İşlem Başarılı Bir Şekilde Tamamlanmıştır. Evrağınız e-posta adresinize gönderilmiştir.`;
+        const pdfUrl = `${API_URL}/api/ek1/${viewingEk1Doc.id}/pdf`;
+        const shareMessage = `Körfez İlaçlama - EK-1 Biyosidal Ürün Uygulama Belgesi\n\n` +
+          `Sayın Müşterimiz, ilaçlama işleminiz başarıyla tamamlanmıştır. Resmi, imzalı EK-1 evrağınızı aşağıdaki bağlantıya tıklayarak PDF formatında görüntüleyebilir veya indirebilirsiniz:\n\n` +
+          `👉 ${pdfUrl}\n\n` +
+          `Bizi tercih ettiğiniz için teşekkür ederiz.`;
 
         const waUrl = `https://api.whatsapp.com/send?phone=${encodeURIComponent(viewingEk1Doc.customer_phone || '')}&text=${encodeURIComponent(shareMessage)}`;
 
