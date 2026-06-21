@@ -151,7 +151,8 @@ const db = {
   },
 
   getCustomerById: async (id) => {
-    return loadData().customers.find(c => c.id === parseInt(id)) || null;
+    const d = await loadData();
+    return d.customers.find(c => c.id === parseInt(id)) || null;
   },
 
   addCustomer: async (unvan, vergi_no, telefon, adres, uygulama_tipi, email = '', konum = '') => {
