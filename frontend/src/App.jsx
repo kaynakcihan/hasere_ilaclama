@@ -1032,10 +1032,10 @@ export default function App() {
   const [selectedAppForEk1, setSelectedAppForEk1] = useState(null);
   const [ek1FormData, setEk1FormData] = useState({
     hedef_hasere: 'Hamam Böceği',
-    biyosidal_urun: 'K-Othrine JEL',
-    urun_miktari: '10 gr',
-    uygulama_yontemi: 'Jel Noktalama',
-    aktif_madde: 'Deltamethrin'
+    biyosidal_urun: '',
+    urun_miktari: '',
+    uygulama_yontemi: '',
+    aktif_madde: ''
   });
   const [ek1Docs, setEk1Docs] = useState([]); 
   const [viewingEk1Doc, setViewingEk1Doc] = useState(null);
@@ -2503,18 +2503,10 @@ export default function App() {
     const endMinute = String(endNow.getMinutes()).padStart(2, '0');
     const endTimeStr = `${endHour}:${endMinute}`;
     
-    // Biyosidal kütüphanesinden ilk ilacı seç
-    const defaultProduct = ek1Products[0] || { 
-      commercialName: 'K-Othrine JEL', 
-      licenseDate: '15.10.2015', 
-      licenseNo: '2015/124', 
-      method: 'Jel Noktalama', 
-      activeIngredient: 'Deltamethrin', 
-      antidote: 'Semptomatik Tedavi', 
-      defaultQuantity: '10 gr' 
-    };
+    // Hiçbir ilaç seçili gelmeyecek
+    const defaultProduct = null;
 
-    const initialReport = `Ömür Karabacak refakatinde, Hamidiye Mahallesi 15034 Sokak No:4 F Edremit/Balıkesir adresinde faaliyet gösteren Körfez Danışmanlık İlaçlama Hizmetleri yetkilileri tarafından ${customer.unvan} adresinde (${customer.adres}) hedef zararlı Hamam Böceği haşeresine karşı ${defaultProduct.commercialName} biyosidal ürünü kullanılarak ${defaultProduct.method} yöntemi ile ilaçlama uygulaması başarıyla tamamlanmıştır.`;
+    const initialReport = `Ömür Karabacak refakatinde, Hamidiye Mahallesi 15034 Sokak No:4 F Edremit/Balıkesir adresinde faaliyet gösteren Körfez Danışmanlık İlaçlama Hizmetleri yetkilileri tarafından ${customer.unvan} adresinde (${customer.adres}) hedef zararlı Hamam Böceği haşeresine karşı gerekli biyosidal ürünler kullanılarak ilaçlama uygulaması başarıyla tamamlanmıştır.`;
 
     setEk1FormData({
       teknisyen_adi: 'Ömür Karabacak',
@@ -2528,15 +2520,15 @@ export default function App() {
       hedef_hasere_diger: false,
       hedef_hasere_diger_detay: '',
       
-      secili_urunler: [defaultProduct], // Çoklu ilaç seçimi için dizi
-      biyosidal_urun: defaultProduct.commercialName,
-      ruhsat_tarihi: defaultProduct.licenseDate,
-      ruhsat_sayisi: defaultProduct.licenseNo,
-      uygulama_sekli: defaultProduct.method,
-      uygulama_yontemi: defaultProduct.method,
-      aktif_madde: defaultProduct.activeIngredient,
-      antidotu: defaultProduct.antidote,
-      urun_miktari: defaultProduct.defaultQuantity,
+      secili_urunler: [], // Hiçbir ilaç seçili gelmesin
+      biyosidal_urun: '',
+      ruhsat_tarihi: '',
+      ruhsat_sayisi: '',
+      uygulama_sekli: '',
+      uygulama_yontemi: '',
+      aktif_madde: '',
+      antidotu: '',
+      urun_miktari: '',
       customer_email: customer.email || '',
       
       yerin_turu: 'İşyeri',
