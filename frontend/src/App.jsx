@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 
 // Dinamik API adresi belirleme (Telefondan yerel ağa bağlanırken sorun yaşamamak için)
 const API_URL = 'https://hasere-ilaclama.onrender.com';
@@ -3350,7 +3350,7 @@ export default function App() {
                             onClick={() => handleCancelAppointment(app.id)}
                             style={{ padding: '10px 16px', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.25)', color: 'var(--error)', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
                           >
-                            ÜR İptal Et
+                            <IconTrash /> İşi İptal Et
                           </button>
                         </>
                       ) : (
