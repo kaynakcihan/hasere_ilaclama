@@ -1693,6 +1693,7 @@ export default function App() {
   useEffect(() => {
     if (token) {
       fetchEk1Products();
+      fetchPests();
       fetchMonthlyReports();
       if (user && user.role === 'admin') {
         fetchExpenses();
