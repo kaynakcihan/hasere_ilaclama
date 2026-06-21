@@ -803,7 +803,8 @@ const db = {
     
     await saveData(d);
     return d.users[i];
-  ,
+  }
+,
 
   // === HAŞERE KÜTÜPHANESİ ===
   getAllPests: async () => {
@@ -840,8 +841,8 @@ const db = {
     }
     return false;
   }
-
 };
+
 
 console.log('Veritabani aktif.');
 module.exports = db;
