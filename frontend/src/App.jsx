@@ -1054,6 +1054,8 @@ export default function App() {
   const [pests, setPests] = useState([]);
   const pestOptionsList = pests.map(p => p.name);
   const [showEditProductModal, setShowEditProductModal] = useState(false);
+  const [showStockModal, setShowStockModal] = useState(false);
+  const [stockAdjustment, setStockAdjustment] = useState({ product: null, amount: '' });
   const [editingProduct, setEditingProduct] = useState(null);
   const [showAddPestModal, setShowAddPestModal] = useState(false);
   const [showEditPestModal, setShowEditPestModal] = useState(false);
