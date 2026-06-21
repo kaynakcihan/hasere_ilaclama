@@ -297,9 +297,20 @@ const db = {
       appointments[i].time = newTime;
     }
     appointments[i].status = 'pending'; // reset status
+    const formatDate = (dStr) => {
+      if (!dStr) return '';
+      const parts = dStr.split('-');
+      if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+      return dStr;
+    };
+    
+    const fOldDate = formatDate(oldDate);
+    const fNewDate = formatDate(newDate);
+    const noteStr = `${fOldDate} tarihinden ${fNewDate} tarihine ${reason || 'belirtilmeyen bir neden'} dolayısıyla ertelenmiştir.`;
+
     appointments[i].notes = appointments[i].notes 
-      ? `${appointments[i].notes} (Ertelendi: ${oldDate} ${oldTime} -> ${newDate} ${newTime || oldTime}, Neden: ${reason || 'Hava Durumu'})`
-      : `Ertelendi: ${oldDate} ${oldTime} -> ${newDate} ${newTime || oldTime}, Neden: ${reason || 'Hava Durumu'}`;
+      ? `${appointments[i].notes}\n(Not: ${noteStr})`
+      : noteStr;
     
     // Bildirim tetikle
     const customer = d.customers.find(c => c.id === appointments[i].customer_id);
