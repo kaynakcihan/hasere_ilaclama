@@ -2142,7 +2142,11 @@ export default function App() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'EK-1 belgesi kaydedilemedi.');
       
-      setSuccess('EK-1 Raporu başarıyla oluşturuldu ve müşteriye gönderildi.');
+      if (ek1FormData.customer_email && ek1FormData.customer_email.trim() !== '') {
+        setSuccess('EK-1 Raporu başarıyla oluşturuldu ve müşteriye e-posta olarak gönderildi.');
+      } else {
+        setSuccess('EK-1 Raporu sisteme başarıyla kaydedildi. (E-posta adresi girilmediği için mail gönderilmedi.)');
+      }
       setShowEk1Modal(false);
       setSelectedAppForEk1(null);
       clearCanvas();
