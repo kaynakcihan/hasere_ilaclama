@@ -25,6 +25,16 @@ const defaultData = {
   ek1_documents: [],
   ek1_products: [],
   appointments: [],
+  pests: [
+    { id: 1, name: 'Karınca' },
+    { id: 2, name: 'Karafatma' },
+    { id: 3, name: 'Hamam Böceği' },
+    { id: 4, name: 'Fare' },
+    { id: 5, name: 'Pire' },
+    { id: 6, name: 'Tahta Kurusu' },
+    { id: 7, name: 'Yılan' },
+    { id: 8, name: 'Akrep' }
+  ],
   monthly_work_done: [],
   expenses: [],
   pest_floor_plans: [],
@@ -495,6 +505,16 @@ const db = {
     return p;
   },
 
+  updateEk1Product: async (id, productData) => {
+    const d = await loadData();
+    if (!d.ek1_products) d.ek1_products = [];
+    const idx = d.ek1_products.findIndex(p => p.id === parseInt(id));
+    if (idx === -1) throw new Error('İlaç bulunamadı');
+    d.ek1_products[idx] = { ...d.ek1_products[idx], ...productData };
+    await saveData(d);
+    return d.ek1_products[idx];
+  },
+
   deleteEk1Product: async (id) => {
     const d = await loadData();
     if (!d.ek1_products) return false;
@@ -783,7 +803,43 @@ const db = {
     
     await saveData(d);
     return d.users[i];
+  ,
+
+  // === HAŞERE KÜTÜPHANESİ ===
+  getAllPests: async () => {
+    const d = await loadData();
+    return d.pests || [];
+  },
+  addPest: async (name) => {
+    const d = await loadData();
+    if (!d.pests) d.pests = [];
+    const newId = d.pests.length > 0 ? Math.max(...d.pests.map(p => p.id)) + 1 : 1;
+    const p = { id: newId, name };
+    d.pests.push(p);
+    await saveData(d);
+    return p;
+  },
+  updatePest: async (id, name) => {
+    const d = await loadData();
+    if (!d.pests) d.pests = [];
+    const idx = d.pests.findIndex(p => p.id === parseInt(id));
+    if (idx === -1) throw new Error('Haşere bulunamadı');
+    d.pests[idx].name = name;
+    await saveData(d);
+    return d.pests[idx];
+  },
+  deletePest: async (id) => {
+    const d = await loadData();
+    if (!d.pests) return false;
+    const initialLen = d.pests.length;
+    d.pests = d.pests.filter(p => p.id !== parseInt(id));
+    if (d.pests.length < initialLen) {
+      await saveData(d);
+      return true;
+    }
+    return false;
   }
+
 };
 
 console.log('Veritabani aktif.');

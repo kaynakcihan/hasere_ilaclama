@@ -1051,7 +1051,14 @@ export default function App() {
   const [quickAppPests, setQuickAppPests] = useState([]);
   const [quickAppCustomPest, setQuickAppCustomPest] = useState('');
 
-  const pestOptionsList = ['Karınca', 'Karafatma', 'Hamam Böceği', 'Fare', 'Pire', 'Tahta Kurusu', 'Yılan', 'Akrep'];
+  const [pests, setPests] = useState([]);
+  const pestOptionsList = pests.map(p => p.name);
+  const [showEditProductModal, setShowEditProductModal] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [showAddPestModal, setShowAddPestModal] = useState(false);
+  const [showEditPestModal, setShowEditPestModal] = useState(false);
+  const [editingPest, setEditingPest] = useState(null);
+  const [newPestNameInput, setNewPestNameInput] = useState('');
 
   // İlaç Kütüphanesi ve Aylık Raporlama State Alanları
   const [ek1Products, setEk1Products] = useState([]);
@@ -1258,6 +1265,20 @@ export default function App() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Randevular yüklenemedi.');
       setDailyAppointments(data);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  // Haşere Kütüphanesini Çek
+  const fetchPests = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/pests`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Haşereler yüklenemedi.');
+      setPests(data);
     } catch (err) {
       setError(err.message);
     }
@@ -1478,6 +1499,7 @@ export default function App() {
       }
 
       fetchEk1Products();
+      fetchPests();
     } catch (err) {
       setError(err.message);
     }
@@ -3599,7 +3621,14 @@ export default function App() {
                           <td style={{ padding: '10px' }}>{p.antidote}</td>
                           <td style={{ padding: '10px', fontWeight: 'bold' }}>{p.defaultQuantity}</td>
                           {user.role === 'admin' && (
-                            <td style={{ padding: '10px', textAlign: 'right' }}>
+                            <td style={{ padding: '10px', textAlign: 'right', display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                              <button 
+                                onClick={() => { setEditingProduct(p); setShowEditProductModal(true); }}
+                                style={{ background: '#3B82F6', border: 'none', color: '#fff', cursor: 'pointer', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}
+                                title="İlacı Düzenle"
+                              >
+                                Düzenle
+                              </button>
                               <button 
                                 onClick={() => handleDeleteEk1Product(p.id)}
                                 style={{ background: '#EF4444', border: 'none', color: '#fff', cursor: 'pointer', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px', marginLeft: 'auto' }}
@@ -3613,6 +3642,67 @@ export default function App() {
                       ))}
                     </tbody>
                   </table>
+                </div>
+              </div>
+
+              
+              {/* Haşere Kütüphanesi Paneli */}
+              <div style={{ background: '#1E293B', border: '1px solid #334155', padding: '25px', borderRadius: '24px', marginBottom: '30px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '10px' }}>
+                  <h2 style={{ margin: 0, fontSize: '1.3rem', color: '#F8FAFC', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    🐛 Aktif Haşere Kütüphanesi
+                  </h2>
+                  {user.role === 'admin' && (
+                    <button 
+                      onClick={() => setShowAddPestModal(true)}
+                      className="btn"
+                      style={{ width: 'auto', padding: '8px 16px', fontSize: '0.82rem', background: '#3B82F6', color: '#FFFFFF', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 'bold', border: 'none', borderRadius: '8px', cursor: 'pointer', transition: 'all 0.2s ease' }}
+                    >
+                      ➕ Yeni Haşere Ekle
+                    </button>
+                  )}
+                </div>
+
+                <div className="table-responsive">
+                  {pests.length === 0 ? (
+                    <div style={{ padding: '30px', textAlign: 'center', color: '#94A3B8', fontSize: '0.9rem', border: '1px dashed #334155', borderRadius: '12px' }}>
+                      Henüz sisteme kayıtlı bir haşere bulunmuyor.
+                    </div>
+                  ) : (
+                    <table className="data-table" style={{ width: '100%', fontSize: '0.85rem' }}>
+                      <thead>
+                        <tr>
+                          <th style={{ padding: '10px', textAlign: 'left', borderBottom: '2px solid #334155' }}>Haşere Adı</th>
+                          {user.role === 'admin' && <th style={{ padding: '10px', textAlign: 'right', borderBottom: '2px solid #334155' }}>İşlemler</th>}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {pests.map(p => (
+                          <tr key={p.id} style={{ borderBottom: '1px solid #334155', transition: 'background 0.2s' }}>
+                            <td style={{ padding: '10px', fontWeight: 'bold', color: '#F8FAFC' }}>{p.name}</td>
+                            {user.role === 'admin' && (
+                              <td style={{ padding: '10px', textAlign: 'right', display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                                <button 
+                                  onClick={() => { setEditingPest(p); setShowEditPestModal(true); }}
+                                  style={{ background: '#3B82F6', border: 'none', color: '#fff', cursor: 'pointer', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}
+                                  title="Haşereyi Düzenle"
+                                >
+                                  Düzenle
+                                </button>
+                                <button 
+                                  onClick={() => handleDeletePest(p.id)}
+                                  style={{ background: '#EF4444', border: 'none', color: '#fff', cursor: 'pointer', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}
+                                  title="Haşereyi Sil"
+                                >
+                                  Sil
+                                </button>
+                              </td>
+                            )}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
                 </div>
               </div>
 
