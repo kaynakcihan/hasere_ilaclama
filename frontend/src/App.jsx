@@ -1053,6 +1053,8 @@ export default function App() {
   const [quickAppCustomPest, setQuickAppCustomPest] = useState('');
 
   const [pests, setPests] = useState([]);
+  const [extraJobs, setExtraJobs] = useState([]);
+  const [newExtraJob, setNewExtraJob] = useState({ customerId: '', month: '', note: '' });
   const pestOptionsList = pests.map(p => p.name);
   const [showEditProductModal, setShowEditProductModal] = useState(false);
   const [showStockModal, setShowStockModal] = useState(false);
@@ -1275,6 +1277,15 @@ export default function App() {
   };
 
   // Haşere Kütüphanesini Çek
+  const fetchExtraJobs = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/extra-jobs`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) setExtraJobs(await res.json());
+    } catch (e) { console.error('Extra jobs fetch error:', e); }
+  };
+  
   const fetchPests = async () => {
     try {
       const response = await fetch(`${API_URL}/api/pests`, {
@@ -2734,6 +2745,36 @@ export default function App() {
       setShowEditPestModal(false);
       fetchPests();
     } catch (err) { setError(`Hata: ${err.name} - ${err.message}`); }
+  };
+
+  const handleAddExtraJob = async (e) => {
+    e.preventDefault();
+    if (!newExtraJob.customerId || !newExtraJob.month || !newExtraJob.note) return setError('Müşteri, ay ve not seçilmelidir.');
+    try {
+      const customer = customers.find(c => c.id.toString() === newExtraJob.customerId.toString());
+      const res = await fetch(`${API_URL}/api/extra-jobs`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ ...newExtraJob, customerName: customer.unvan })
+      });
+      if (!res.ok) throw new Error('Not eklenemedi');
+      setSuccess('Not başarıyla eklendi');
+      setNewExtraJob({ customerId: '', month: '', note: '' });
+      fetchExtraJobs();
+    } catch (err) { setError(err.message); }
+  };
+
+  const handleDeleteExtraJob = async (id) => {
+    if (!window.confirm('Bu notu silmek istediğinize emin misiniz?')) return;
+    try {
+      const res = await fetch(`${API_URL}/api/extra-jobs/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error('Not silinemedi');
+      setSuccess('Not silindi');
+      fetchExtraJobs();
+    } catch (err) { setError(err.message); }
   };
 
   const handleDeletePest = async (id) => {

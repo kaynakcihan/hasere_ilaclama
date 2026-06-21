@@ -1311,3 +1311,38 @@ if (require.main === module) {
   });
 }
 module.exports = app;
+
+// ==========================================
+// EXTRA JOBS (GENEL NOTLAR) ENDPOINTS
+// ==========================================
+app.get('/api/extra-jobs', auth, async (req, res) => {
+  try {
+    const jobs = await db.getAllExtraJobs();
+    res.json(jobs);
+  } catch (e) {
+    res.status(500).json({ error: 'Genel notlar getirilemedi.' });
+  }
+});
+
+app.post('/api/extra-jobs', auth, adminOnly, async (req, res) => {
+  const { customerId, customerName, month, note } = req.body;
+  if (!customerId || !month || !note) {
+    return res.status(400).json({ error: 'Müşteri, Ay ve Not zorunludur.' });
+  }
+  try {
+    const job = await db.addExtraJob(customerId, customerName, month, note);
+    res.status(201).json(job);
+  } catch (e) {
+    res.status(500).json({ error: 'Genel not eklenemedi.' });
+  }
+});
+
+app.delete('/api/extra-jobs/:id', auth, adminOnly, async (req, res) => {
+  try {
+    const success = await db.deleteExtraJob(req.params.id);
+    if (!success) return res.status(404).json({ error: 'Not bulunamadı.' });
+    res.json({ message: 'Not başarıyla silindi.' });
+  } catch (e) {
+    res.status(500).json({ error: 'Not silinemedi.' });
+  }
+});

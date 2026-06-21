@@ -902,6 +902,40 @@ const db = {
     }
     return false;
   }
+,
+
+  // EXTRA JOBS (GENEL NOTLAR) EKLENTISI
+  getAllExtraJobs: async () => {
+    const d = await loadData();
+    return d.extraJobs || [];
+  },
+  addExtraJob: async (customerId, customerName, month, note) => {
+    const d = await loadData();
+    if (!d.extraJobs) d.extraJobs = [];
+    const job = {
+      id: Date.now(),
+      customerId,
+      customerName,
+      month,
+      note,
+      created_at: new Date().toISOString()
+    };
+    d.extraJobs.push(job);
+    await saveData(d);
+    return job;
+  },
+  deleteExtraJob: async (id) => {
+    const d = await loadData();
+    if (!d.extraJobs) return false;
+    const initialLen = d.extraJobs.length;
+    d.extraJobs = d.extraJobs.filter(j => j.id !== parseInt(id));
+    if (d.extraJobs.length < initialLen) {
+      await saveData(d);
+      return true;
+    }
+    return false;
+  }
+
 };
 
 
