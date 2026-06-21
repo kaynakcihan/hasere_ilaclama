@@ -1706,6 +1706,12 @@ export default function App() {
       setError('Lütfen bir randevu tarihi seçin.');
       return;
     }
+    const today = new Date();
+    const todayStr = new Date(today.getTime() - (today.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+    if (newAppDate < todayStr) {
+      setError('Hata: Geçmiş bir tarihe randevu ekleyemezsiniz.');
+      return;
+    }
 
     let finalDate = newAppDate;
     const ilce = (selectedCustomerForDetail.konum || "").split(" / ")[1] || selectedCustomerForDetail.adres || "";
@@ -1771,6 +1777,12 @@ export default function App() {
     e.preventDefault();
     if (!quickAppCustomerId) {
       setError('Lütfen bir müşteri seçin.');
+      return;
+    }
+    const today = new Date();
+    const todayStr = new Date(today.getTime() - (today.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+    if (quickAppDate < todayStr) {
+      setError('Hata: Geçmiş bir tarihe randevu ekleyemezsiniz.');
       return;
     }
     
@@ -3363,14 +3375,26 @@ export default function App() {
                       {app.status === 'pending' ? (
                         <>
                           {app.date > new Date().toISOString().split('T')[0] ? (
-                            <button 
-                              className="btn-small btn-action-success"
-                              style={{ opacity: 0.6, cursor: 'not-allowed', background: '#94a3b8' }}
+                            <div 
+                              className="btn-small"
+                              style={{ 
+                                opacity: 0.8, 
+                                cursor: 'not-allowed', 
+                                background: '#334155', 
+                                color: '#e2e8f0', 
+                                border: '1px solid #475569',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '6px',
+                                padding: '6px 12px',
+                                borderRadius: '8px',
+                                fontSize: '0.8rem',
+                                fontWeight: '500'
+                              }}
                               title="İşin tarihi gelmeden (o gün gelmeden) resmi evrak doldurulamaz."
-                              disabled
                             >
                               🔒 Tarihi Bekleniyor
-                            </button>
+                            </div>
                           ) : (
                             <button 
                               className="btn-small btn-action-success"
