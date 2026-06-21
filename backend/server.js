@@ -490,6 +490,18 @@ app.post('/api/customers', auth, adminOnly, async (req, res) => {
   if (!telefon || telefon.length !== 11 || !/^\d+$/.test(telefon)) return res.status(400).json({ error: 'Lütfen 11 haneli telefon numarasını eksiksiz ve sadece rakam olarak giriniz. (Örn: 05551234567)' });
   if (!adres) return res.status(400).json({ error: 'Lütfen açık adres bilgisini giriniz.' });
   if (!uygulama_tipi) return res.status(400).json({ error: 'Lütfen uygulama tipi seçiniz.' });
+  
+  // Mükerrer Kayıt Kontrolü
+  const allCustomers = await db.getAllCustomers();
+  const existing = allCustomers.find(c => c.unvan.toLowerCase().trim() === unvan.toLowerCase().trim());
+  if (existing) {
+    if (existing.telefon === telefon) {
+      return res.status(400).json({ error: 'Bu işletme ve telefon numarası zaten sistemde kayıtlı!' });
+    } else {
+      return res.status(400).json({ error: 'Bu isimde bir işletme zaten kayıtlı! Eğer bu farklı bir şubeyse, lütfen isim sonuna şube veya yetkili adını ekleyin (Örn: Ömür Karabacak - Merkez).' });
+    }
+  }
+
   try { res.status(201).json(await db.addCustomer(unvan, vergi_no, telefon, adres, uygulama_tipi, email, konum)); }
   catch (e) { res.status(500).json({ error: 'Musteri eklenemedi.' }); }
 });
