@@ -3654,65 +3654,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* DEPO VE STOK YONETIMI PANELI */}
-              <div style={{ background: '#1E293B', border: '1px solid #334155', padding: '25px', borderRadius: '24px', marginBottom: '30px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                  <h2 style={{ margin: 0, fontSize: '1.3rem', color: '#F8FAFC', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    📦 Depo ve Stok Yönetimi
-                  </h2>
-                </div>
-                <div style={{ overflow: 'auto' }}>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem', color: '#CBD5E1', textAlign: 'left' }}>
-                    <thead>
-                      <tr style={{ borderBottom: '1px solid #334155', color: '#94A3B8' }}>
-                        <th style={{ padding: '12px' }}>İlaç Adı</th>
-                        <th style={{ padding: '12px' }}>Mevcut Stok</th>
-                        <th style={{ padding: '12px' }}>Uyarı Sınırı</th>
-                        <th style={{ padding: '12px' }}>Durum</th>
-                        {user.role === 'admin' && <th style={{ padding: '12px', textAlign: 'right' }}>İşlemler</th>}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {ek1Products.length === 0 ? (
-                        <tr><td colSpan="5" style={{ padding: '20px', textAlign: 'center', color: '#64748B' }}>Henüz ürün eklenmemiş.</td></tr>
-                      ) : (
-                        ek1Products.map((p) => {
-                          const stock = p.stock || 0;
-                          const crit = p.criticalStock || 10;
-                          const isCritical = stock <= crit;
-                          return (
-                            <tr key={p.id} style={{ borderBottom: '1px solid #334155' }}>
-                              <td style={{ padding: '12px', fontWeight: 'bold', color: '#F8FAFC' }}>{p.commercialName}</td>
-                              <td style={{ padding: '12px', color: isCritical ? '#EF4444' : '#10B981', fontWeight: 'bold', fontSize: '1.1rem' }}>
-                                {stock} <span style={{fontSize:'0.8rem', color:'#94A3B8'}}>{p.unit || 'Birim'}</span>
-                              </td>
-                              <td style={{ padding: '12px' }}>{crit} {p.unit || 'Birim'}</td>
-                              <td style={{ padding: '12px' }}>
-                                {isCritical ? (
-                                  <span style={{ background: 'rgba(239,68,68,0.2)', color: '#EF4444', padding: '4px 8px', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 'bold' }}>🔴 Kritik Stok</span>
-                                ) : (
-                                  <span style={{ background: 'rgba(16,185,129,0.2)', color: '#10B981', padding: '4px 8px', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 'bold' }}>🟢 Yeterli</span>
-                                )}
-                              </td>
-                              {user.role === 'admin' && (
-                                <td style={{ padding: '12px', textAlign: 'right' }}>
-                                  <button 
-                                    onClick={() => { setStockAdjustment({ product: p, amount: '' }); setShowStockModal(true); }}
-                                    style={{ background: '#3B82F6', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '8px', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 'bold' }}
-                                  >
-                                    📦 Stok Güncelle (+/-)
-                                  </button>
-                                </td>
-                              )}
-                            </tr>
-                          );
-                        })
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
               {/* İlaç Kütüphanesi Paneli */}
               <div style={{ background: '#1E293B', border: '1px solid #334155', padding: '25px', borderRadius: '24px', marginBottom: '30px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '10px' }}>
@@ -3740,11 +3681,16 @@ export default function App() {
                         <th style={{ padding: '10px' }}>Uygulama Şekli</th>
                         <th style={{ padding: '10px' }}>Antidotu</th>
                         <th style={{ padding: '10px' }}>Birim Miktar</th>
+                        <th style={{ padding: '10px' }}>Stok Durumu</th>
                         {user.role === 'admin' && <th style={{ padding: '10px', textAlign: 'right' }}>İşlem</th>}
                       </tr>
                     </thead>
                     <tbody>
-                      {ek1Products.map(p => (
+                      {ek1Products.map(p => {
+                        const stock = p.stock || 0;
+                        const crit = p.criticalStock || 10;
+                        const isCritical = stock <= crit;
+                        return (
                         <tr key={p.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
                           <td style={{ padding: '10px', fontWeight: 'bold', color: '#F8FAFC' }}>{p.commercialName}</td>
                           <td style={{ padding: '10px' }}>{p.licenseDate} <br/><span style={{ fontSize: '0.75rem', color: '#64748B' }}>{p.licenseNo}</span></td>
@@ -3752,6 +3698,13 @@ export default function App() {
                           <td style={{ padding: '10px' }}>{p.method}</td>
                           <td style={{ padding: '10px' }}>{p.antidote}</td>
                           <td style={{ padding: '10px', fontWeight: 'bold' }}>{p.defaultQuantity}</td>
+                          <td style={{ padding: '10px' }}>
+                            {isCritical ? (
+                               <span style={{ background: 'rgba(239,68,68,0.2)', color: '#EF4444', padding: '4px 8px', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 'bold' }}>🔴 {stock} {p.unit || 'Birim'} (Kritik)</span>
+                            ) : (
+                               <span style={{ background: 'rgba(16,185,129,0.2)', color: '#10B981', padding: '4px 8px', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 'bold' }}>🟢 {stock} {p.unit || 'Birim'}</span>
+                            )}
+                          </td>
                           {user.role === 'admin' && (
                             <td style={{ padding: '10px', textAlign: 'right', display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
                               <button 
@@ -3771,7 +3724,8 @@ export default function App() {
                             </td>
                           )}
                         </tr>
-                      ))}
+                      );
+                      })}
                     </tbody>
                   </table>
                 </div>
