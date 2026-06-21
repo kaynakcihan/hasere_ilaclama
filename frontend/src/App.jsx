@@ -1019,6 +1019,8 @@ export default function App() {
   const [newAppDate, setNewAppDate] = useState('');
   const [newAppTime, setNewAppTime] = useState('12:00');
   const [newAppNotes, setNewAppNotes] = useState('');
+  const [newAppPests, setNewAppPests] = useState([]);
+  const [newAppCustomPest, setNewAppCustomPest] = useState('');
 
   // Erteleme Modalı State
   const [showRescheduleModal, setShowRescheduleModal] = useState(false);
@@ -1046,6 +1048,10 @@ export default function App() {
   const [quickAppDate, setQuickAppDate] = useState('');
   const [quickAppTime, setQuickAppTime] = useState('12:00');
   const [quickAppNotes, setQuickAppNotes] = useState('');
+  const [quickAppPests, setQuickAppPests] = useState([]);
+  const [quickAppCustomPest, setQuickAppCustomPest] = useState('');
+
+  const pestOptionsList = ['Karınca', 'Karafatma', 'Hamam Böceği', 'Fare', 'Pire', 'Tahta Kurusu', 'Yılan', 'Akrep'];
 
   // İlaç Kütüphanesi ve Aylık Raporlama State Alanları
   const [ek1Products, setEk1Products] = useState([]);
@@ -1739,6 +1745,9 @@ export default function App() {
 
     setError('');
     try {
+      const finalPests = [...newAppPests];
+      if (newAppCustomPest.trim()) finalPests.push(newAppCustomPest.trim());
+
       const response = await fetch(`${API_URL}/api/appointments`, {
         method: 'POST',
         headers: {
@@ -1749,7 +1758,8 @@ export default function App() {
           customerId: selectedCustomerForDetail.id,
           date: finalDate,
           time: newAppTime,
-          notes: newAppNotes
+          notes: newAppNotes,
+          pests: finalPests
         })
       });
       const data = await response.json();
@@ -1761,6 +1771,8 @@ export default function App() {
       setNewAppDate('');
       setNewAppTime('12:00');
       setNewAppNotes('');
+      setNewAppPests([]);
+      setNewAppCustomPest('');
       fetchCustomerEk1Docs(selectedCustomerForDetail.id);
       fetchCustomerAppointments(selectedCustomerForDetail.id);
       
@@ -1813,6 +1825,9 @@ export default function App() {
 
     setError('');
     try {
+      const finalPests = [...quickAppPests];
+      if (quickAppCustomPest.trim()) finalPests.push(quickAppCustomPest.trim());
+
       const response = await fetch(`${API_URL}/api/appointments`, {
         method: 'POST',
         headers: {
@@ -1823,13 +1838,16 @@ export default function App() {
           customerId: quickAppCustomerId,
           date: finalDate,
           time: quickAppTime,
-          notes: quickAppNotes
+          notes: quickAppNotes,
+          pests: finalPests
         })
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Randevu atanamadı.');
       setSuccess('Randevu başarıyla oluşturuldu.');
       setShowQuickAppModal(false);
+      setQuickAppPests([]);
+      setQuickAppCustomPest('');
       fetchDailyAppointments(selectedDate);
       if (selectedCustomerForDetail && selectedCustomerForDetail.id === parseInt(quickAppCustomerId)) {
         fetchCustomerAppointments(selectedCustomerForDetail.id);
@@ -2524,14 +2542,16 @@ export default function App() {
     // Hiçbir ilaç seçili gelmeyecek
     const defaultProduct = null;
 
-    const initialReport = `Ömür Karabacak refakatinde, Hamidiye Mahallesi 15034 Sokak No:4 F Edremit/Balıkesir adresinde faaliyet gösteren Körfez Danışmanlık İlaçlama Hizmetleri yetkilileri tarafından ${customer.unvan} adresinde (${customer.adres}) hedef zararlı Hamam Böceği haşeresine karşı gerekli biyosidal ürünler kullanılarak ilaçlama uygulaması başarıyla tamamlanmıştır.`;
+    const pestsStr = (app && app.pests && app.pests.length > 0) ? app.pests.join(', ') : 'Hamam Böceği';
+
+    const initialReport = `Ömür Karabacak refakatinde, Hamidiye Mahallesi 15034 Sokak No:4 F Edremit/Balıkesir adresinde faaliyet gösteren Körfez Danışmanlık İlaçlama Hizmetleri yetkilileri tarafından ${customer.unvan} adresinde (${customer.adres}) hedef zararlı ${pestsStr} haşeresine karşı gerekli biyosidal ürünler kullanılarak ilaçlama uygulaması başarıyla tamamlanmıştır.`;
 
     setEk1FormData({
       teknisyen_adi: 'Ömür Karabacak',
       uygulayicilar: [], // Hiçbir uygulayıcı otomatik seçili gelmeyecek
       mesul_mudur: MESUL_MUDUR,
-      hedef_hasere: 'Hamam Böceği',
-      hedef_hasere_yuruyen: true,
+      hedef_hasere: pestsStr,
+      hedef_hasere_yuruyen: (app && app.pests && app.pests.length > 0) ? false : true,
       hedef_hasere_ucan: false,
       hedef_hasere_fare: false,
       hedef_hasere_sican: false,
@@ -3047,6 +3067,31 @@ export default function App() {
                         </div>
                       </div>
                       
+                      <div className="input-group">
+                        <label className="input-label">Hedef Zararlılar (İsteğe Bağlı)</label>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '8px', padding: '10px', background: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                          {pestOptionsList.map(pest => (
+                            <label key={pest} style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', cursor: 'pointer', color: 'var(--text-primary)' }}>
+                              <input 
+                                type="checkbox"
+                                checked={newAppPests.includes(pest)}
+                                onChange={(e) => {
+                                  if (e.target.checked) setNewAppPests([...newAppPests, pest]);
+                                  else setNewAppPests(newAppPests.filter(p => p !== pest));
+                                }}
+                              /> {pest}
+                            </label>
+                          ))}
+                        </div>
+                        <input 
+                          type="text" 
+                          className="form-input" 
+                          placeholder="Listede olmayan farklı bir zararlı varsa yazın..." 
+                          value={newAppCustomPest}
+                          onChange={(e) => setNewAppCustomPest(e.target.value)}
+                        />
+                      </div>
+
                       <div className="input-group">
                         <label className="input-label">Ziyaret / Uygulama Notları</label>
                         <textarea 
@@ -5029,6 +5074,31 @@ export default function App() {
                     onChange={(e) => setQuickAppTime(e.target.value)}
                   />
                 </div>
+              </div>
+
+              <div className="input-group">
+                <label className="input-label">Hedef Zararlılar (İsteğe Bağlı)</label>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '8px', padding: '10px', background: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                  {pestOptionsList.map(pest => (
+                    <label key={pest} style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', cursor: 'pointer', color: 'var(--text-primary)' }}>
+                      <input 
+                        type="checkbox"
+                        checked={quickAppPests.includes(pest)}
+                        onChange={(e) => {
+                          if (e.target.checked) setQuickAppPests([...quickAppPests, pest]);
+                          else setQuickAppPests(quickAppPests.filter(p => p !== pest));
+                        }}
+                      /> {pest}
+                    </label>
+                  ))}
+                </div>
+                <input 
+                  type="text" 
+                  className="form-input" 
+                  placeholder="Listede olmayan farklı bir zararlı varsa yazın..." 
+                  value={quickAppCustomPest}
+                  onChange={(e) => setQuickAppCustomPest(e.target.value)}
+                />
               </div>
 
               <div className="input-group">

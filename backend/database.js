@@ -254,7 +254,7 @@ const db = {
     });
   },
 
-  addAppointment: async (customerId, date, time, notes) => {
+  addAppointment: async (customerId, date, time, notes, pests) => {
     const d = await loadData();
     if (!d.appointments) d.appointments = [];
     const newId = d.appointments.length > 0 ? Math.max(...d.appointments.map(a => a.id)) + 1 : 1;
@@ -264,6 +264,7 @@ const db = {
       date,
       time: time || '12:00',
       notes: notes || '',
+      pests: pests || [], // Seçilen haşereler listesi
       status: 'pending', // pending, completed
       ek1_id: null,
       created_at: new Date().toISOString()
