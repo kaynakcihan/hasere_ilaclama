@@ -1378,3 +1378,36 @@ body {
     display: none !important;
   }
 }
+
+.compact-job-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 12px 14px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.compact-job-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--accent);
+}
+.compact-job-card:hover {
+  border-color: rgba(16, 185, 129, 0.4);
+}
+.compact-job-card .customer-info-row {
+  margin-bottom: 4px;
+  font-size: 0.8rem;
+}
+.compact-job-card .customer-unvan {
+  margin: 0 0 8px 0 !important;
+  font-size: 1.05rem !important;
+}

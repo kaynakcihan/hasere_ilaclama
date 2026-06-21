@@ -3280,10 +3280,10 @@ export default function App() {
             ) : (
               <div className="card-grid">
                 {dailyAppointments.map((app) => (
-                  <div key={app.id} className="customer-card">
+                  <div key={app.id} className="compact-job-card">
                     <div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '8px' }}>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '6px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
                           <span style={{ background: 'rgba(16,185,129,0.12)', color: 'var(--accent)', padding: '3px 8px', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 'bold', display: 'inline-flex', alignItems: 'center', gap: '4px', width: 'fit-content' }}>
                             <IconClock /> {app.time || '12:00'}
                           </span>
@@ -3321,7 +3321,7 @@ export default function App() {
                     </div>
 
                     {/* Görev Eylemleri */}
-                    <div className="job-card-actions">
+                    <div className="job-card-actions" style={{ marginTop: '10px', paddingTop: '10px', display: 'flex', gap: '5px' }}>
                       {app.status === 'pending' ? (
                         <>
                           <button 
