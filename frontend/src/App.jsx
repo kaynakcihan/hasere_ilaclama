@@ -949,6 +949,18 @@ export default function App() {
   const [notifications, setNotifications] = useState([]);
   const [showNotificationsDropdown, setShowNotificationsDropdown] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const notificationsRef = useRef(null);
+
+  // Bildirim menüsü dışına tıklanınca kapat
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notificationsRef.current && !notificationsRef.current.contains(event.target)) {
+        setShowNotificationsDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Giriş Formu (Google olana kadar kolay test için)
   const [emailInput, setEmailInput] = useState('admin@example.com'); // Varsayılan kolay test e-postası
@@ -1168,6 +1180,22 @@ export default function App() {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) fetchNotifications();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Okunmuş bildirimleri sil/temizle
+  const clearAllNotifications = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/notifications/clear`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (response.ok) {
+        fetchNotifications();
+        setShowNotificationsDropdown(false);
+      }
     } catch (err) {
       console.error(err);
     }
@@ -2605,7 +2633,7 @@ export default function App() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
           
           {/* Bildirim Zili */}
-          <div style={{ position: 'relative' }}>
+          <div style={{ position: 'relative' }} ref={notificationsRef}>
             <button 
               className="action-btn" 
               style={{ position: 'relative', background: showNotificationsDropdown ? 'var(--primary)' : 'rgba(255, 255, 255, 0.05)', color: showNotificationsDropdown ? '#fff' : 'var(--text-color)' }}
@@ -2655,14 +2683,25 @@ export default function App() {
               }}>
                 <div style={{ padding: '15px', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <h3 style={{ margin: 0, fontSize: '1rem', color: '#fff' }}>Bildirimler</h3>
-                  {notifications.filter(n => !n.is_read).length > 0 && (
-                    <button 
-                      onClick={markAllNotificationsAsRead}
-                      style={{ background: 'transparent', border: 'none', color: 'var(--accent)', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 'bold' }}
-                    >
-                      Tümünü Okundu İşaretle
-                    </button>
-                  )}
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    {notifications.filter(n => !n.is_read).length > 0 && (
+                      <button 
+                        onClick={markAllNotificationsAsRead}
+                        style={{ background: 'transparent', border: 'none', color: 'var(--accent)', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 'bold' }}
+                      >
+                        Tümünü Okundu İşaretle
+                      </button>
+                    )}
+                    {notifications.length > 0 && (
+                      <button 
+                        onClick={clearAllNotifications}
+                        style={{ background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 'bold' }}
+                        title="Tüm bildirimleri sil"
+                      >
+                        Temizle
+                      </button>
+                    )}
+                  </div>
                 </div>
                 
                 <div style={{ padding: '10px', display: 'flex', flexDirection: 'column', gap: '8px' }}>

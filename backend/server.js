@@ -1037,6 +1037,16 @@ app.post('/api/notifications/read-all', auth, async (req, res) => {
 });
 
 // 4) Kullanıcı Bildirim Tercihlerini Güncelle
+app.delete('/api/notifications/clear', auth, async (req, res) => {
+  try {
+    const ok = await db.clearUserNotifications(req.user.id);
+    res.json({ success: ok });
+  } catch (e) {
+    res.status(500).json({ error: 'İşlem başarısız.' });
+  }
+});
+
+// 5) Kullanıcı Bildirim Tercihlerini Güncelle
 app.put('/api/users/preferences', auth, async (req, res) => {
   try {
     const updated = await db.updateUserPreferences(req.user.id, req.body);
