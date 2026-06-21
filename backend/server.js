@@ -685,17 +685,23 @@ app.post('/api/ek1', auth, async (req, res) => {
         await db.updateCustomerEmail(customerId, documentData.customer_email);
         customer.email = documentData.customer_email;
       }
+      let emailStatus = 'skipped';
+      let emailError = null;
+
       if (customer.email) {
         try {
           await sendEk1Email(customer, doc, req.headers.host);
           console.log(`EK-1 e-postası başarıyla gönderildi: ${customer.email}`);
+          emailStatus = 'success';
         } catch (mailErr) {
           console.error('EK-1 e-postası gönderilemedi:', mailErr.message);
+          emailStatus = 'failed';
+          emailError = mailErr.message;
         }
       }
     }
 
-    res.status(201).json(doc);
+    res.status(201).json({ ...doc, _email_status: emailStatus, _email_error: emailError });
   } catch (e) {
     console.error('EK-1 olusturma hatasi:', e);
     res.status(500).json({ error: 'EK-1 belgesi olusturulamadi.' });
