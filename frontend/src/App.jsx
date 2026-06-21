@@ -3018,6 +3018,7 @@ export default function App() {
                             type="date" 
                             required 
                             className="form-input" 
+                            min={new Date().toISOString().split('T')[0]}
                             value={newAppDate}
                             onChange={(e) => setNewAppDate(e.target.value)}
                           />
@@ -4104,6 +4105,7 @@ export default function App() {
                     type="date" 
                     required 
                     className="form-input" 
+                    min={new Date().toISOString().split('T')[0]}
                     value={rescheduleDate}
                     onChange={(e) => setRescheduleDate(e.target.value)}
                   />
@@ -4977,6 +4979,7 @@ export default function App() {
                     type="date" 
                     required 
                     className="form-input" 
+                    min={new Date().toISOString().split('T')[0]}
                     value={quickAppDate}
                     onChange={(e) => setQuickAppDate(e.target.value)}
                   />

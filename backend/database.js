@@ -381,6 +381,12 @@ const db = {
       if (i !== -1) {
         d.appointments[i].status = 'completed';
         d.appointments[i].ek1_id = newId;
+        
+        // Randevu tarihi varsa, belgenin tarihi de randevu tarihi olmali (ileriye donuk doldurmalar icin)
+        if (d.appointments[i].date) {
+          doc.created_at = d.appointments[i].date + 'T12:00:00.000Z';
+        }
+        
         appInfo = {
           appointment_id: d.appointments[i].id,
           scheduled_date: d.appointments[i].date,
