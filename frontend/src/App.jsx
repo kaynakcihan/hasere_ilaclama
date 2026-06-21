@@ -3268,11 +3268,13 @@ export default function App() {
 
             {/* Görev Kartları Listesi */}
             {dailyAppointments.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '70px 20px', color: '#94A3B8', background: '#1E293B', borderRadius: '24px', border: '1px solid #334155' }}>
-                <IconCalendar />
-                <h3 style={{ marginTop: '15px', color: '#F8FAFC' }}>İş Planı Bulunmamaktadır</h3>
-                <p style={{ fontSize: '0.9rem', marginTop: '5px' }}>
-                  Bu tarihte planlanmış bir ilaçlama çalışması veya ziyaret kaydı bulunmuyor.
+              <div style={{ textAlign: 'center', padding: '50px 20px', color: '#64748B', background: 'transparent', border: '1px dashed #334155', borderRadius: '16px' }}>
+                <div style={{ width: '40px', height: '40px', margin: '0 auto', opacity: 0.4 }}>
+                  <IconCalendar />
+                </div>
+                <h3 style={{ marginTop: '12px', color: '#94A3B8', fontSize: '1.1rem', fontWeight: '500' }}>İş Planı Boş</h3>
+                <p style={{ fontSize: '0.85rem', marginTop: '4px' }}>
+                  Bu tarihte planlanmış bir ilaçlama çalışması bulunmuyor.
                 </p>
               </div>
             ) : (
