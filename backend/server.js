@@ -691,6 +691,8 @@ app.post('/api/ek1', auth, async (req, res) => {
       }
 
       if (customer.email) {
+        // İLERİDE ÜCRETLİ SUNUCUYA GEÇİLİNCE BURADAKİ YORUM SATIRLARI KALDIRILACAK
+        /*
         try {
           await sendEk1Email(customer, doc, req.headers.host);
           console.log(`EK-1 e-postası başarıyla gönderildi: ${customer.email}`);
@@ -700,6 +702,9 @@ app.post('/api/ek1', auth, async (req, res) => {
           emailStatus = 'failed';
           emailError = mailErr.message;
         }
+        */
+        // Şimdilik zaman aşımı olmasın diye otomatik olarak "failed" dönüyoruz:
+        emailStatus = 'failed';
       }
     }
 
