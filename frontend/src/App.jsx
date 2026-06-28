@@ -3594,8 +3594,15 @@ export default function App() {
                           
                           <div className="customer-info-row">
                             <IconFileText />
-                            <span>Tip: <strong>{app.uygulama_tipi || 'Kapalı Alan'}</strong></span>
+                            <span>Uygulama Alanı: <strong>{app.uygulama_tipi || 'Kapalı Alan'}</strong></span>
                           </div>
+                          
+                          {app.pests && app.pests.length > 0 && (
+                            <div className="customer-info-row" style={{ color: '#F59E0B' }}>
+                              <IconAlertTriangle />
+                              <span>Hedef Zararlılar: <strong>{Array.isArray(app.pests) ? app.pests.join(', ') : app.pests}</strong></span>
+                            </div>
+                          )}
 
                           {/* Görev Eylemleri */}
                           <div className="job-card-actions" style={{ marginTop: '15px', paddingTop: '15px', borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
