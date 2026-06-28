@@ -3269,7 +3269,7 @@ export default function App() {
                             type="date" 
                             required 
                             className="form-input" 
-                            min={new Date().toISOString().split('T')[0]}
+                            min={(() => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); })()}
                             value={newAppDate}
                             onChange={(e) => setNewAppDate(e.target.value)}
                           />
@@ -3751,7 +3751,7 @@ const isExpanded = expandedAppId === app.id;
                           <div className="job-card-actions" style={{ marginTop: '15px', paddingTop: '15px', borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
                             {app.status === 'pending' ? (
                               <>
-                                {app.date > new Date().toISOString().split('T')[0] ? (
+                                {app.date > (() => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); })() ? (
                                   <div 
                                     className="btn-small"
                                     style={{ 
@@ -3943,7 +3943,7 @@ const isExpanded = expandedAppId === app.id;
                           <div className="job-card-actions" style={{ marginTop: '15px', paddingTop: '15px', borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
                             {app.status === 'pending' ? (
                               <>
-                                {app.date > new Date().toISOString().split('T')[0] ? (
+                                {app.date > (() => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); })() ? (
                                   <div 
                                     className="btn-small"
                                     style={{ 
@@ -4816,7 +4816,7 @@ const isExpanded = expandedAppId === app.id;
                     type="date" 
                     required 
                     className="form-input" 
-                    min={new Date().toISOString().split('T')[0]}
+                    min={(() => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); })()}
                     value={rescheduleDate}
                     onChange={(e) => setRescheduleDate(e.target.value)}
                   />
@@ -5777,7 +5777,7 @@ const isExpanded = expandedAppId === app.id;
                     type="date" 
                     required 
                     className="form-input" 
-                    min={new Date().toISOString().split('T')[0]}
+                    min={(() => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); })()}
                     value={quickAppDate}
                     onChange={(e) => setQuickAppDate(e.target.value)}
                   />
