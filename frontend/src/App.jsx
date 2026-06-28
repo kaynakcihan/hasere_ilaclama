@@ -3215,10 +3215,9 @@ export default function App() {
                           />
                         </div>
                         <div>
-                          <label className="input-label">Uygulama Saati *</label>
+                          <label className="input-label">Uygulama Saati (Esnekse Boş Bırakın)</label>
                           <input 
-                            type="time" 
-                            required 
+                            type="time"  
                             className="form-input" 
                             value={newAppTime}
                             onChange={(e) => setNewAppTime(e.target.value)}
@@ -5716,10 +5715,9 @@ const isExpanded = expandedAppId === app.id;
                   />
                 </div>
                 <div>
-                  <label className="input-label">Uygulama Saati *</label>
-                  <input 
-                    type="time" 
-                    required 
+                  <label className="input-label">Uygulama Saati (Esnekse Boş Bırakın)</label>
+                          <input 
+                            type="time"  
                     className="form-input" 
                     value={quickAppTime}
                     onChange={(e) => setQuickAppTime(e.target.value)}
