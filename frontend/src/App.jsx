@@ -4273,8 +4273,8 @@ export default function App() {
                 <select 
                   className="form-input" 
                   required 
-                  value={String(formData.konum || '') ? formData.konum.split(' / ')[1] || '' : ''}
-                  onChange={(e) => setFormData({ ...formData, konum: `${String(formData.konum || '') ? formData.konum.split(' / ')[0] || '' : ''} / ${e.target.value}` })}
+                  value={(formData?.konum || '').split(' / ')[1] || ''}
+                  onChange={(e) => setFormData({ ...formData, konum: `${(formData?.konum || '').split(' / ')[0] || ''} / ${e.target.value}` })}
                 >
                   <option value="" disabled>-- İl Seçin --</option>
                   {cityNames.map(city => (
@@ -4287,14 +4287,16 @@ export default function App() {
                 <select 
                   className="form-input" 
                   required 
-                  value={String(formData.konum || '') ? formData.konum.split(' / ')[0] || '' : ''}
-                  onChange={(e) => setFormData({ ...formData, konum: `${e.target.value} / ${String(formData.konum || '') ? formData.konum.split(' / ')[1] || '' : ''}` })}
-                  disabled={!formData.konum || !formData.konum.split(' / ')[1]}
+                  value={(formData?.konum || '').split(' / ')[0] || ''}
+                  onChange={(e) => setFormData({ ...formData, konum: `${e.target.value} / ${(formData?.konum || '').split(' / ')[1] || ''}` })}
+                  disabled={!(formData?.konum || '').split(' / ')[1]}
                 >
                   <option value="" disabled>-- İlçe Seçin --</option>
-                  {formData.konum && formData.konum.split(' / ')[1] && turkeyCities[formData.konum.split(' / ')[1]] ? turkeyCities[formData.konum.split(' / ')[1]].map(district => (
-                    <option key={district} value={district}>{district}</option>
-                  )) : null}
+                  {((formData?.konum || '').split(' / ')[1] && turkeyCities[(formData?.konum || '').split(' / ')[1]]) ? 
+                    turkeyCities[(formData?.konum || '').split(' / ')[1]].map(district => (
+                      <option key={district} value={district}>{district}</option>
+                    )) : null
+                  }
                 </select>
               </div>
 
@@ -4399,8 +4401,8 @@ export default function App() {
                 <select 
                   className="form-input" 
                   required 
-                  value={String(formData.konum || '') ? formData.konum.split(' / ')[1] || '' : ''}
-                  onChange={(e) => setFormData({ ...formData, konum: `${String(formData.konum || '') ? formData.konum.split(' / ')[0] || '' : ''} / ${e.target.value}` })}
+                  value={(formData?.konum || '').split(' / ')[1] || ''}
+                  onChange={(e) => setFormData({ ...formData, konum: `${(formData?.konum || '').split(' / ')[0] || ''} / ${e.target.value}` })}
                 >
                   <option value="" disabled>-- İl Seçin --</option>
                   {cityNames.map(city => (
@@ -4413,14 +4415,16 @@ export default function App() {
                 <select 
                   className="form-input" 
                   required 
-                  value={String(formData.konum || '') ? formData.konum.split(' / ')[0] || '' : ''}
-                  onChange={(e) => setFormData({ ...formData, konum: `${e.target.value} / ${String(formData.konum || '') ? formData.konum.split(' / ')[1] || '' : ''}` })}
-                  disabled={!formData.konum || !formData.konum.split(' / ')[1]}
+                  value={(formData?.konum || '').split(' / ')[0] || ''}
+                  onChange={(e) => setFormData({ ...formData, konum: `${e.target.value} / ${(formData?.konum || '').split(' / ')[1] || ''}` })}
+                  disabled={!(formData?.konum || '').split(' / ')[1]}
                 >
                   <option value="" disabled>-- İlçe Seçin --</option>
-                  {formData.konum && formData.konum.split(' / ')[1] && turkeyCities[formData.konum.split(' / ')[1]] ? turkeyCities[formData.konum.split(' / ')[1]].map(district => (
-                    <option key={district} value={district}>{district}</option>
-                  )) : null}
+                  {((formData?.konum || '').split(' / ')[1] && turkeyCities[(formData?.konum || '').split(' / ')[1]]) ? 
+                    turkeyCities[(formData?.konum || '').split(' / ')[1]].map(district => (
+                      <option key={district} value={district}>{district}</option>
+                    )) : null
+                  }
                 </select>
               </div>
 
