@@ -615,12 +615,12 @@ app.get('/api/appointments/suggest-date', auth, async (req, res) => {
 
 // 2) Yeni Randevu Ekle
 app.post('/api/appointments', auth, async (req, res) => {
-  const { customerId, date, time, notes, pests } = req.body;
+  const { customerId, date, time, notes, pests, uygulama_tipi } = req.body;
   if (!customerId || !date) {
     return res.status(400).json({ error: 'Musteri ve tarih zorunludur.' });
   }
   try {
-    const a = await db.addAppointment(customerId, date, time, notes, pests);
+    const a = await db.addAppointment(customerId, date, time, notes, pests, uygulama_tipi);
     res.status(201).json(a);
   } catch (e) {
     res.status(500).json({ error: 'Randevu olusturulamadi.' });

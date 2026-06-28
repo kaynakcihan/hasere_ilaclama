@@ -976,8 +976,7 @@ export default function App() {
       konum: '',
     telefon: '',
     adres: '',
-    uygulama_tipi: 'Kapalı Alan',
-    email: ''
+        email: ''
   });
 
   // Yeni Arayüz State Alanları
@@ -1053,6 +1052,7 @@ export default function App() {
   const [quickAppCustomerSearch, setQuickAppCustomerSearch] = useState('');
   const [showCustomerDropdown, setShowCustomerDropdown] = useState(false);
   const [quickAppDate, setQuickAppDate] = useState('');
+  const [quickAppUygulamaTipi, setQuickAppUygulamaTipi] = useState('Kapalı Alan');
   const [quickAppTime, setQuickAppTime] = useState('12:00');
   const [quickAppNotes, setQuickAppNotes] = useState('');
   const [quickAppPests, setQuickAppPests] = useState([]);
@@ -1883,7 +1883,8 @@ export default function App() {
           date: finalDate,
           time: quickAppTime,
           notes: quickAppNotes,
-          pests: finalPests
+          pests: finalPests,
+          uygulama_tipi: quickAppUygulamaTipi
         })
       });
       const data = await response.json();
@@ -2431,10 +2432,7 @@ export default function App() {
       setError('Lütfen açık adres bilgisini giriniz.');
       return;
     }
-    if (!formData.uygulama_tipi) {
-      setError('Lütfen uygulama tipi seçiniz.');
-      return;
-    }
+    
 
     
 
@@ -2463,8 +2461,7 @@ export default function App() {
       konum: '',
         telefon: '',
         adres: '',
-        uygulama_tipi: 'Kapalı Alan',
-        email: ''
+                email: ''
       });
       fetchCustomers();
     } catch (err) {
@@ -2494,10 +2491,7 @@ export default function App() {
       setError('Lütfen açık adres bilgisini giriniz.');
       return;
     }
-    if (!formData.uygulama_tipi) {
-      setError('Lütfen uygulama tipi seçiniz.');
-      return;
-    }
+    
 
     
 
@@ -2558,8 +2552,7 @@ export default function App() {
         konum: customer.konum || '',
       telefon: customer.telefon,
       adres: customer.adres,
-      uygulama_tipi: customer.uygulama_tipi,
-      email: customer.email || ''
+            email: customer.email || ''
     });
     setShowEditModal(true);
   };
@@ -3127,10 +3120,7 @@ export default function App() {
                         <IconMapPin />
                         <span>Adres: {selectedCustomerForDetail.adres}</span>
                       </div>
-                      <div className="customer-info-row">
-                        <IconFileText />
-                        <span>Uygulama Tipi: <strong>{selectedCustomerForDetail.uygulama_tipi}</strong></span>
-                      </div>
+                      
                     </div>
                   </div>
 
@@ -3405,7 +3395,7 @@ export default function App() {
                       </div>
 
                       <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <span className="customer-badge">{c.uygulama_tipi}</span>
+                        
                         
                         <div className="customer-actions" style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
                             <button 
@@ -3494,6 +3484,7 @@ export default function App() {
                     setQuickAppDate(selectedDate);
                     setQuickAppTime('12:00');
                     setQuickAppNotes('');
+                    setQuickAppUygulamaTipi('Kapalı Alan');
                     setQuickAppCustomerId('');
                     setQuickAppCustomerSearch('');
                     setShowCustomerDropdown(false);
@@ -3581,7 +3572,7 @@ export default function App() {
                           
                           <div className="customer-info-row">
                             <IconFileText />
-                            <span>Tip: <strong>{app.customer.uygulama_tipi}</strong></span>
+                            <span>Tip: <strong>{app.uygulama_tipi || 'Kapalı Alan'}</strong></span>
                           </div>
 
                           {/* Görev Eylemleri */}
@@ -4303,18 +4294,7 @@ export default function App() {
               </div>
 
 
-              <div className="input-group">
-                <label className="input-label">Uygulama Alanı Tipi *</label>
-                <select 
-                  className="form-input"
-                  value={formData.uygulama_tipi}
-                  onChange={(e) => setFormData({ ...formData, uygulama_tipi: e.target.value })}
-                >
-                  <option value="Kapalı Alan">Kapalı Alan (Mesken, İşyeri vb.)</option>
-                  <option value="Açık Alan">Açık Alan (Bahçe, Tarla, Sokak vb.)</option>
-                  <option value="Açık ve Kapalı Alan">Hem Açık Hem Kapalı Alan</option>
-                </select>
-              </div>
+              
 
               <div style={{ display: 'flex', gap: '12px', marginTop: '25px' }}>
                 <button type="button" className="btn btn-secondary" onClick={() => setShowAddModal(false)}>
@@ -4431,18 +4411,7 @@ export default function App() {
               </div>
 
 
-              <div className="input-group">
-                <label className="input-label">Uygulama Alanı Tipi *</label>
-                <select 
-                  className="form-input"
-                  value={formData.uygulama_tipi}
-                  onChange={(e) => setFormData({ ...formData, uygulama_tipi: e.target.value })}
-                >
-                  <option value="Kapalı Alan">Kapalı Alan (Mesken, İşyeri vb.)</option>
-                  <option value="Açık Alan">Açık Alan (Bahçe, Tarla, Sokak vb.)</option>
-                  <option value="Açık ve Kapalı Alan">Hem Açık Hem Kapalı Alan</option>
-                </select>
-              </div>
+              
 
               <div style={{ display: 'flex', gap: '12px', marginTop: '25px' }}>
                 <button type="button" className="btn btn-secondary" onClick={() => setShowEditModal(false)}>

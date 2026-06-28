@@ -264,7 +264,7 @@ const db = {
     });
   },
 
-  addAppointment: async (customerId, date, time, notes, pests) => {
+  addAppointment: async (customerId, date, time, notes, pests, uygulama_tipi) => {
     const d = await loadData();
     if (!d.appointments) d.appointments = [];
     const newId = d.appointments.length > 0 ? Math.max(...d.appointments.map(a => a.id)) + 1 : 1;
@@ -275,6 +275,7 @@ const db = {
       time: time || '12:00',
       notes: notes || '',
       pests: pests || [], // Seçilen haşereler listesi
+      uygulama_tipi: uygulama_tipi || 'Kapalı Alan',
       status: 'pending', // pending, completed
       ek1_id: null,
       created_at: new Date().toISOString()
