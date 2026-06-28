@@ -926,9 +926,11 @@ const VoiceButton = ({ onResult }) => {
 
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) {
-      alert("Bu tarayıcı ses tanımayı desteklemiyor. Lütfen Chrome kullanın.");
+      alert("HATA: Bu tarayıcı ses tanımayı desteklemiyor.");
       return;
     }
+
+    if (isListening) return;
 
     const recognition = new SR();
     recognition.lang = 'tr-TR';
@@ -937,20 +939,29 @@ const VoiceButton = ({ onResult }) => {
     recognition.maxAlternatives = 1;
 
     setIsListening(true);
+    alert("🎙️ Mikrofon açıldı! Şimdi konuşun...");
 
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
+      alert("✅ Algılanan metin: " + transcript);
       if (transcript && transcript.trim()) {
         onResultRef.current(transcript.trim());
       }
     };
 
-    recognition.onerror = () => setIsListening(false);
-    recognition.onend = () => setIsListening(false);
+    recognition.onerror = (event) => {
+      alert("❌ Ses hatası: " + event.error);
+      setIsListening(false);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
 
     try {
       recognition.start();
     } catch (err) {
+      alert("❌ Başlatma hatası: " + err.message);
       setIsListening(false);
     }
   };
@@ -959,7 +970,7 @@ const VoiceButton = ({ onResult }) => {
     <button
       type="button"
       onClick={handleClick}
-      title={isListening ? "Dinleniyor..." : "Sesle Metin Yazdır (Mikrofona tıkla ve konuş)"}
+      title={isListening ? "Dinleniyor..." : "Sesle Metin Yazdır"}
       style={{
         background: isListening ? '#ef4444' : '#10b981',
         color: '#fff',
