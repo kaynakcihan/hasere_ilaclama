@@ -3760,7 +3760,18 @@ const isExpanded = expandedAppId === app.id;
                           <div className="job-card-actions" style={{ marginTop: '15px', paddingTop: '15px', borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
                             {app.status === 'pending' ? (
                               <>
-                                {app.date > (() => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); })() ? (
+                                {(() => {
+                                    const now = new Date();
+                                    const todayStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+                                    if (app.date > todayStr) return true;
+                                    if (app.date === todayStr && app.time && app.time.trim() !== '') {
+                                      const [h, m] = app.time.split(':').map(Number);
+                                      const appMinutes = h * 60 + m;
+                                      const nowMinutes = now.getHours() * 60 + now.getMinutes();
+                                      return appMinutes > nowMinutes;
+                                    }
+                                    return false;
+                                  })() ? (
                                   <div 
                                     className="btn-small"
                                     style={{ 
@@ -3952,7 +3963,18 @@ const isExpanded = expandedAppId === app.id;
                           <div className="job-card-actions" style={{ marginTop: '15px', paddingTop: '15px', borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
                             {app.status === 'pending' ? (
                               <>
-                                {app.date > (() => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); })() ? (
+                                {(() => {
+                                    const now = new Date();
+                                    const todayStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+                                    if (app.date > todayStr) return true;
+                                    if (app.date === todayStr && app.time && app.time.trim() !== '') {
+                                      const [h, m] = app.time.split(':').map(Number);
+                                      const appMinutes = h * 60 + m;
+                                      const nowMinutes = now.getHours() * 60 + now.getMinutes();
+                                      return appMinutes > nowMinutes;
+                                    }
+                                    return false;
+                                  })() ? (
                                   <div 
                                     className="btn-small"
                                     style={{ 
