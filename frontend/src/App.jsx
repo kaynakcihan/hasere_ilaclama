@@ -4585,41 +4585,53 @@ export default function App() {
 
         // Rapor metnini dinamik olarak yenileyen fonksiyon
         const refreshReportText = (customFormData = ek1FormData) => {
-          const pests = [];
-          if (customFormData.hedef_hasere_yuruyen) pests.push('Yürüyen Haşere');
-          if (customFormData.hedef_hasere_ucan) pests.push('Uçan Haşere');
-          if (customFormData.hedef_hasere_fare) pests.push('Fare');
-          if (customFormData.hedef_hasere_sican) pests.push('Sıçan');
-          if (customFormData.hedef_hasere_diger && customFormData.hedef_hasere_diger_detay) pests.push(customFormData.hedef_hasere_diger_detay);
-          const pestsStr = pests.join(', ') || 'Belirtilmeyen Haşere';
+            const pests = [];
+            if (customFormData.hedef_hasere_yuruyen) pests.push('Yürüyen Haşere');
+            if (customFormData.hedef_hasere_ucan) pests.push('Uçan Haşere');
+            if (customFormData.hedef_hasere_fare) pests.push('Fare');
+            if (customFormData.hedef_hasere_sican) pests.push('Sıçan');
+            if (customFormData.hedef_hasere_diger && customFormData.hedef_hasere_diger_detay) pests.push(customFormData.hedef_hasere_diger_detay);
+            const pestsStr = pests.join(', ') || 'Belirtilmeyen Haşere';
+  
+            let hasereTuruText = 'haşere';
+            let uygulamaYontemText = 'ilaçlama';
+  
+            if (customFormData.hedef_hasere_ucan && !customFormData.hedef_hasere_yuruyen && !customFormData.hedef_hasere_fare && !customFormData.hedef_hasere_sican) {
+              hasereTuruText = 'uçan haşere';
+              uygulamaYontemText = 'U.L.V. Soğuk Sisleme Püskürtme';
+            } else if ((customFormData.hedef_hasere_fare || customFormData.hedef_hasere_sican) && !customFormData.hedef_hasere_yuruyen && !customFormData.hedef_hasere_ucan) {
+              hasereTuruText = 'kemirgen (fare/sıçan)';
+              uygulamaYontemText = 'yem istasyonları kurulumu ve yemleme';
+            } else if (customFormData.hedef_hasere_yuruyen && !customFormData.hedef_hasere_ucan && !customFormData.hedef_hasere_fare && !customFormData.hedef_hasere_sican) {
+              hasereTuruText = 'yürüyen haşere (hamam böceği)';
+              uygulamaYontemText = 'jel noktalama';
+            } else {
+              hasereTuruText = pestsStr.toLowerCase();
+              uygulamaYontemText = customFormData.uygulama_yontemi || 'ilaçlama';
+            }
+  
+            const selectedProds = customFormData.secili_urunler || [];
+            const urunlerStr = selectedProds.map(p => `${p.commercialName} (${p.activeIngredient || ''})`).join(', ') || customFormData.biyosidal_urun || 'biyosidal';
+            const yontemlerList = Array.from(new Set(selectedProds.map(p => p.method).filter(Boolean)));
+            const yontemlerStr = yontemlerList.join(' / ') || uygulamaYontemText;
+  
+            let text = `Körfez Danışmanlık İlaçlama Hizmetleri tarafından ${customer.unvan} firmasının/adresinin (${customer.adres}) ${customFormData.yerin_turu || 'işyeri'} alanlarında, hedef zararlı ${hasereTuruText} türlerine karşı ${urunlerStr} biyosidal ürünü/ürünleri kullanılarak ${yontemlerStr} yöntemi ile ilaçlama uygulaması başarıyla tamamlanmıştır.`;
+  
+            const appArea = selectedAppForEk1?.uygulama_tipi || '';
+            const isKapaliAlan = appArea.includes('Kapalı Alan');
+            const isYuruyen = customFormData.hedef_hasere_yuruyen;
+            const hasYem = selectedProds.some(p => (p.commercialName && p.commercialName.toLowerCase().includes('yem')) || (p.method && p.method.toLowerCase().includes('yem'))) || (customFormData.biyosidal_urun || '').toLowerCase().includes('yem') || (customFormData.uygulama_yontemi || '').toLowerCase().includes('yem');
+            
+            if (isKapaliAlan && isYuruyen) {
+              text += ' İlaçlama uygulaması yapılan kapalı alanlara 2 saat girilmemeli ve girildikten sonra 45-60 dakika havalandırılmalı.';
+            }
 
-          let hasereTuruText = 'haşere';
-          let uygulamaYontemText = 'ilaçlama';
+            if (hasYem) {
+              text += ' Yem istasyonları gezildi eksik olanlar yemlendi ve istasyonlarda temizleme yapıldı.';
+            }
 
-          if (customFormData.hedef_hasere_ucan && !customFormData.hedef_hasere_yuruyen && !customFormData.hedef_hasere_fare && !customFormData.hedef_hasere_sican) {
-            hasereTuruText = 'uçan haşere';
-            uygulamaYontemText = 'U.L.V. Soğuk Sisleme Püskürtme';
-          } else if ((customFormData.hedef_hasere_fare || customFormData.hedef_hasere_sican) && !customFormData.hedef_hasere_yuruyen && !customFormData.hedef_hasere_ucan) {
-            hasereTuruText = 'kemirgen (fare/sıçan)';
-            uygulamaYontemText = 'yem istasyonları kurulumu ve yemleme';
-          } else if (customFormData.hedef_hasere_yuruyen && !customFormData.hedef_hasere_ucan && !customFormData.hedef_hasere_fare && !customFormData.hedef_hasere_sican) {
-            hasereTuruText = 'yürüyen haşere (hamam böceği)';
-            uygulamaYontemText = 'jel noktalama';
-          } else {
-            hasereTuruText = pestsStr.toLowerCase();
-            uygulamaYontemText = customFormData.uygulama_yontemi || 'ilaçlama';
-          }
-
-          // Seçilen tüm ilaçları ve aktif maddeleri virgülle birleştirelim
-          const selectedProds = customFormData.secili_urunler || [];
-          const urunlerStr = selectedProds.map(p => `${p.commercialName} (${p.activeIngredient || ''})`).join(', ') || customFormData.biyosidal_urun || 'biyosidal';
-          const yontemlerList = Array.from(new Set(selectedProds.map(p => p.method).filter(Boolean)));
-          const yontemlerStr = yontemlerList.join(' / ') || uygulamaYontemText;
-
-          const text = `Ömür Karabacak refakatinde, Hamidiye Mahallesi 15034 Sokak No:4 F Edremit/Balıkesir adresinde faaliyet gösteren Körfez Danışmanlık İlaçlama Hizmetleri yetkilileri tarafından ${customer.unvan} firmasının/adresinin (${customer.adres}) ${customFormData.yerin_turu || 'İşyeri'} alanlarında, hedef zararlı ${hasereTuruText} türlerine karşı ${urunlerStr} biyosidal ürünü/ürünleri kullanılarak ${yontemlerStr} yöntemi ile ilaçlama uygulaması başarıyla tamamlanmıştır.`;
-
-          setEk1FormData(prev => ({ ...prev, uygulamalar_ve_gorusler: text }));
-        };
+            setEk1FormData(prev => ({ ...prev, uygulamalar_ve_gorusler: text }));
+          };
 
         return (
           <div className="modal-overlay">
