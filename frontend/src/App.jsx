@@ -3204,6 +3204,32 @@ export default function App() {
                       </div>
                       
                       <div className="input-group">
+                        <label className="input-label">Uygulama Alanı Tipi *</label>
+                        <select 
+                          className="form-input"
+                          required
+                          value={newAppUygulamaTipi || 'Kapalı Alan'}
+                          onChange={(e) => setNewAppUygulamaTipi(e.target.value)}
+                        >
+                          <option value="Kapalı Alan">Kapalı Alan (Mesken, İşyeri vb.)</option>
+                          <option value="Açık Alan">Açık Alan (Bahçe, Site İçi vb.)</option>
+                        </select>
+                      </div>
+
+                      <div className="input-group">
+                <label className="input-label">Uygulama Alanı Tipi *</label>
+                <select 
+                  className="form-input"
+                  required
+                  value={quickAppUygulamaTipi || 'Kapalı Alan'}
+                  onChange={(e) => setQuickAppUygulamaTipi(e.target.value)}
+                >
+                  <option value="Kapalı Alan">Kapalı Alan (Mesken, İşyeri vb.)</option>
+                  <option value="Açık Alan">Açık Alan (Bahçe, Site İçi vb.)</option>
+                </select>
+              </div>
+
+              <div className="input-group">
                         <label className="input-label">Hedef Zararlılar (İsteğe Bağlı)</label>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '8px', padding: '10px', background: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
                           {pestOptionsList.map(pest => (
@@ -4985,6 +5011,19 @@ export default function App() {
                   </div>
 
                   <div className="input-group">
+                <label className="input-label">Uygulama Alanı Tipi *</label>
+                <select 
+                  className="form-input"
+                  required
+                  value={quickAppUygulamaTipi || 'Kapalı Alan'}
+                  onChange={(e) => setQuickAppUygulamaTipi(e.target.value)}
+                >
+                  <option value="Kapalı Alan">Kapalı Alan (Mesken, İşyeri vb.)</option>
+                  <option value="Açık Alan">Açık Alan (Bahçe, Site İçi vb.)</option>
+                </select>
+              </div>
+
+              <div className="input-group">
                     <label className="input-label">Hedef Zararlı Türü (Çoklu Seçmeli) *</label>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '10px', marginTop: '5px' }}>
                       <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: '#E2E8F0', cursor: 'pointer' }}>
@@ -5385,6 +5424,19 @@ export default function App() {
                     onChange={(e) => setQuickAppTime(e.target.value)}
                   />
                 </div>
+              </div>
+
+              <div className="input-group">
+                <label className="input-label">Uygulama Alanı Tipi *</label>
+                <select 
+                  className="form-input"
+                  required
+                  value={quickAppUygulamaTipi || 'Kapalı Alan'}
+                  onChange={(e) => setQuickAppUygulamaTipi(e.target.value)}
+                >
+                  <option value="Kapalı Alan">Kapalı Alan (Mesken, İşyeri vb.)</option>
+                  <option value="Açık Alan">Açık Alan (Bahçe, Site İçi vb.)</option>
+                </select>
               </div>
 
               <div className="input-group">
