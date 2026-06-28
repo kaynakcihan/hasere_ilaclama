@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import turkeyCities from './cities.json';
 
+const cityNames = Object.keys(turkeyCities).sort((a,b) => a.localeCompare(b, 'tr'));
+
 // Dinamik API adresi belirleme (Telefondan yerel ağa bağlanırken sorun yaşamamak için)
 const API_URL = 'https://hasere-ilaclama.onrender.com';
 
