@@ -917,63 +917,69 @@ const WeatherBadge = ({ date, address, konum }) => {
 
 const VoiceButton = ({ onResult }) => {
   const [isListening, setIsListening] = useState(false);
-  const startListening = (e) => {
+  const onResultRef = useRef(onResult);
+  onResultRef.current = onResult;
+
+  const handleClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-      alert("Tarayıcınız ses tanıma özelliğini desteklemiyor. Lütfen Chrome kullanın.");
+
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) {
+      alert("Bu tarayıcı ses tanımayı desteklemiyor. Lütfen Chrome kullanın.");
       return;
     }
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
+
+    const recognition = new SR();
     recognition.lang = 'tr-TR';
-    recognition.continuous = true;
+    recognition.continuous = false;
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
 
     setIsListening(true);
+
     recognition.onresult = (event) => {
-      let fullTranscript = '';
-      for (let i = 0; i < event.results.length; i++) {
-        if (event.results[i].isFinal) {
-          fullTranscript += event.results[i][0].transcript + ' ';
-        }
-      }
-      if (fullTranscript.trim()) {
-        onResult(fullTranscript.trim());
+      const transcript = event.results[0][0].transcript;
+      if (transcript && transcript.trim()) {
+        onResultRef.current(transcript.trim());
       }
     };
-    recognition.onerror = (event) => {
-      console.error('Speech error:', event.error);
-      setIsListening(false);
-    };
+
+    recognition.onerror = () => setIsListening(false);
     recognition.onend = () => setIsListening(false);
-    try { recognition.start(); } catch(err) { setIsListening(false); }
+
+    try {
+      recognition.start();
+    } catch (err) {
+      setIsListening(false);
+    }
   };
 
   return (
-    <button 
+    <button
       type="button"
-      onClick={startListening}
-      title={isListening ? "Dinleniyor..." : "Sesle Metin Yazdır"}
+      onClick={handleClick}
+      title={isListening ? "Dinleniyor..." : "Sesle Metin Yazdır (Mikrofona tıkla ve konuş)"}
       style={{
         background: isListening ? '#ef4444' : '#10b981',
         color: '#fff',
         border: 'none',
         borderRadius: '50%',
-        width: '28px',
-        height: '28px',
+        width: '32px',
+        height: '32px',
+        minWidth: '32px',
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
         cursor: 'pointer',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+        boxShadow: isListening ? '0 0 12px rgba(239,68,68,0.6)' : '0 2px 6px rgba(16,185,129,0.3)',
         marginLeft: '12px',
         animation: isListening ? 'pulse 1.5s infinite' : 'none',
-        verticalAlign: 'middle'
+        verticalAlign: 'middle',
+        flexShrink: 0
       }}
     >
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
         <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
         <line x1="12" y1="19" x2="12" y2="22"></line>
@@ -981,6 +987,7 @@ const VoiceButton = ({ onResult }) => {
     </button>
   );
 };
+
 
 export default function App() {
   // Oturum Durumları
