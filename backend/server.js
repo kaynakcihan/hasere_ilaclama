@@ -620,6 +620,34 @@ app.post('/api/appointments', auth, async (req, res) => {
   try {
     
 
+    
+    // --- ÇİFT KAYIT KONTROLÜ (DUPLICATE CHECK) ---
+    const allCustomers = await db.getCustomers();
+    const allAppointments = await db.getAppointments();
+    
+    const targetCustomer = allCustomers.find(c => c.id === parseInt(customerId));
+    if (targetCustomer) {
+      const targetUnvan = (targetCustomer.unvan || '').toLowerCase().trim();
+      const targetPhone = (targetCustomer.telefon || '').trim();
+      
+      const duplicateExists = allAppointments.some(app => {
+        if (app.date === date && app.status !== 'cancelled') {
+          const appCust = allCustomers.find(c => c.id === parseInt(app.customer_id));
+          if (appCust) {
+            const appUnvan = (appCust.unvan || '').toLowerCase().trim();
+            const appPhone = (appCust.telefon || '').trim();
+            return appUnvan !== '' && appUnvan === targetUnvan && appPhone === targetPhone;
+          }
+        }
+        return false;
+      });
+      
+      if (duplicateExists) {
+        return res.status(400).json({ error: 'Bu müşterinin (Ünvan ve Telefon eşleşmesi) bu tarihte zaten bir randevusu var!' });
+      }
+    }
+    // ---------------------------------------------
+
     if (recurring && recurring.enabled && recurring.days && recurring.days.length > 0 && recurring.endDate) {
       // Periyodik randevu mantığı
       const dayMap = {

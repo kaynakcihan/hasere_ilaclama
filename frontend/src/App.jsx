@@ -1830,7 +1830,7 @@ export default function App() {
       
       setSuccess('Randevu başarıyla oluşturuldu.');
       setNewAppDate('');
-      setNewAppTime('12:00');
+      setNewAppTime('');
       setNewAppNotes('');
       setNewAppPests([]);
       setNewAppCustomPest('');
@@ -3578,7 +3578,7 @@ export default function App() {
                   className="btn btn-primary btn-small"
                   onClick={() => {
                     setQuickAppDate(selectedDate);
-                    setQuickAppTime('12:00');
+                    setQuickAppTime('');
                     setQuickAppNotes('');
                     setQuickAppUygulamaTipi(['Kapalı Alan']);
                     setQuickAppCustomerId('');
