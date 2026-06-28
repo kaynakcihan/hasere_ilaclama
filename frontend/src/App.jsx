@@ -914,6 +914,65 @@ const WeatherBadge = ({ date, address, konum }) => {
   );
 };
 
+
+const VoiceButton = ({ onResult }) => {
+  const [isListening, setIsListening] = useState(false);
+  const startListening = (e) => {
+    e.preventDefault();
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      alert("Tarayıcınız ses tanıma özelliğini desteklemiyor.");
+      return;
+    }
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'tr-TR';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => setIsListening(true);
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      onResult(transcript);
+    };
+    recognition.onerror = (event) => {
+      console.error(event.error);
+      setIsListening(false);
+    };
+    recognition.onend = () => setIsListening(false);
+    recognition.start();
+  };
+
+  return (
+    <button 
+      type="button"
+      onClick={startListening}
+      title={isListening ? "Dinleniyor..." : "Sesle Metin Yazdır"}
+      style={{
+        background: isListening ? '#ef4444' : '#10b981',
+        color: '#fff',
+        border: 'none',
+        borderRadius: '50%',
+        width: '28px',
+        height: '28px',
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+        marginLeft: '12px',
+        animation: isListening ? 'pulse 1.5s infinite' : 'none',
+        verticalAlign: 'middle'
+      }}
+    >
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+        <line x1="12" y1="19" x2="12" y2="22"></line>
+      </svg>
+    </button>
+  );
+};
+
 export default function App() {
   // Oturum Durumları
   const [user, setUser] = useState(null);
@@ -5488,9 +5547,13 @@ const isExpanded = expandedAppId === app.id;
                 {/* 4. YAPILAN UYGULAMA DETAYLARI VE GÖRÜŞLER */}
                 <div style={{ borderBottom: '1px solid #334155', paddingBottom: '15px', marginBottom: '15px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                    <h4 style={{ color: 'var(--accent)', margin: 0, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    <h4 style={{ color: 'var(--accent)', margin: 0, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.5px' , display: 'flex', alignItems: 'center', gap: '10px' }}>
                       4. Yapılan Uygulamalar ve Görüşler
-                    </h4>
+                    
+                        <VoiceButton onResult={(text) => {
+                          const current = ek1FormData.uygulamalar_ve_gorusler || '';
+                          setEk1FormData({ ...ek1FormData, uygulamalar_ve_gorusler: current ? current + ' ' + text : text });
+                        }} /></h4>
                     <button 
                       type="button" 
                       onClick={refreshReportText}
@@ -5512,9 +5575,13 @@ const isExpanded = expandedAppId === app.id;
 
                 {/* 5. GÜVENLİİK ÖNLEMLERİ VE YAPILAN ÖNERİLER */}
                 <div style={{ borderBottom: '1px solid #334155', paddingBottom: '15px', marginBottom: '15px' }}>
-                  <h4 style={{ color: 'var(--accent)', margin: '0 0 10px 0', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  <h4 style={{ color: 'var(--accent)', margin: '0 0 10px 0', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.5px' , display: 'flex', alignItems: 'center', gap: '10px' }}>
                     5. Güvenlik Önlemleri ve Öneriler *
-                  </h4>
+                  
+                      <VoiceButton onResult={(text) => {
+                        const current = ek1FormData.oneriler || '';
+                        setEk1FormData({ ...ek1FormData, oneriler: current ? current + ' ' + text : text });
+                      }} /></h4>
                   <textarea 
                     className="form-input" 
                     required 
