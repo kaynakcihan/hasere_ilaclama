@@ -3281,8 +3281,47 @@ export default function App() {
                         />
                       </div>
 
-                      <button type="submit" className="btn btn-primary" style={{ marginTop: '10px' }}>
-                        <IconPlus /> Randevu Programı Kaydet
+                      
+              <div style={{ marginTop: '15px', padding: '15px', background: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1rem', color: 'var(--accent)', cursor: 'pointer', fontWeight: 'bold' }}>
+                  <input type="checkbox" checked={newAppIsRecurring} onChange={e => setNewAppIsRecurring(e.target.checked)} />
+                  🔄 Bu Randevuyu Tekrarla (Periyodik)
+                </label>
+                {newAppIsRecurring && (
+                  <div style={{ marginTop: '15px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                    <div className="input-group">
+                      <label className="input-label">Hangi Günler Tekrarlansın?</label>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                        {['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'].map(d => (
+                          <label key={d} style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', cursor: 'pointer', color: 'var(--text-primary)' }}>
+                            <input 
+                              type="checkbox"
+                              checked={newAppRecurringDays.includes(d)}
+                              onChange={(e) => {
+                                if (e.target.checked) setNewAppRecurringDays([...newAppRecurringDays, d]);
+                                else setNewAppRecurringDays(newAppRecurringDays.filter(x => x !== d));
+                              }}
+                            /> {d}
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="input-group">
+                      <label className="input-label">Bitiş Tarihi (Hangi tarihe kadar devam etsin?)</label>
+                      <input 
+                        type="date"
+                        className="form-input"
+                        value={newAppRecurringEndDate}
+                        onChange={(e) => setNewAppRecurringEndDate(e.target.value)}
+                        required={newAppIsRecurring}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+<button type="submit" className="btn btn-primary" style={{ marginTop: '10px' }}>
+<IconPlus /> Randevu Programı Kaydet
                       </button>
                     </form>
                   </div>
@@ -5524,8 +5563,47 @@ export default function App() {
                 />
               </div>
 
-              <div style={{ display: 'flex', gap: '12px', marginTop: '25px' }}>
-                <button type="button" className="btn btn-secondary" onClick={() => setShowQuickAppModal(false)}>
+              
+              <div style={{ marginTop: '15px', padding: '15px', background: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1rem', color: 'var(--accent)', cursor: 'pointer', fontWeight: 'bold' }}>
+                  <input type="checkbox" checked={quickAppIsRecurring} onChange={e => setQuickAppIsRecurring(e.target.checked)} />
+                  🔄 Bu Randevuyu Tekrarla (Periyodik)
+                </label>
+                {quickAppIsRecurring && (
+                  <div style={{ marginTop: '15px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                    <div className="input-group">
+                      <label className="input-label">Hangi Günler Tekrarlansın?</label>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                        {['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'].map(d => (
+                          <label key={d} style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', cursor: 'pointer', color: 'var(--text-primary)' }}>
+                            <input 
+                              type="checkbox"
+                              checked={quickAppRecurringDays.includes(d)}
+                              onChange={(e) => {
+                                if (e.target.checked) setQuickAppRecurringDays([...quickAppRecurringDays, d]);
+                                else setQuickAppRecurringDays(quickAppRecurringDays.filter(x => x !== d));
+                              }}
+                            /> {d}
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="input-group">
+                      <label className="input-label">Bitiş Tarihi (Hangi tarihe kadar devam etsin?)</label>
+                      <input 
+                        type="date"
+                        className="form-input"
+                        value={quickAppRecurringEndDate}
+                        onChange={(e) => setQuickAppRecurringEndDate(e.target.value)}
+                        required={quickAppIsRecurring}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+<div style={{ display: 'flex', gap: '12px', marginTop: '25px' }}>
+<button type="button" className="btn btn-secondary" onClick={() => setShowQuickAppModal(false)}>
                   Vazgeç
                 </button>
                 <button type="submit" className="btn btn-primary" style={{ width: 'auto', marginLeft: 'auto' }} disabled={customers.length === 0}>
