@@ -1047,6 +1047,7 @@ export default function App() {
   const [showQuickAppModal, setShowQuickAppModal] = useState(false);
   const [quickAppCustomerId, setQuickAppCustomerId] = useState('');
   const [quickAppCustomerSearch, setQuickAppCustomerSearch] = useState('');
+  const [showCustomerDropdown, setShowCustomerDropdown] = useState(false);
   const [quickAppDate, setQuickAppDate] = useState('');
   const [quickAppTime, setQuickAppTime] = useState('12:00');
   const [quickAppNotes, setQuickAppNotes] = useState('');
@@ -3494,6 +3495,7 @@ export default function App() {
                     setQuickAppNotes('');
                     setQuickAppCustomerId('');
                     setQuickAppCustomerSearch('');
+                    setShowCustomerDropdown(false);
                     setShowQuickAppModal(true);
                   }}
                   style={{ width: 'auto', padding: '6px 12px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '4px' }}
@@ -5261,34 +5263,61 @@ export default function App() {
                     Sistemde kayıtlı müşteri bulunamadı. Lütfen önce "Müşteriler" sekmesinden yeni bir müşteri ekleyin.
                   </div>
                 ) : (
-                  <div>
+                  <div style={{ position: 'relative' }}>
                     <input
-                      list="customers-list"
+                      type="text"
                       className="form-input"
-                      placeholder="Müşteri adını yazmaya başlayın veya listeden seçin..."
+                      placeholder="Müşteri adını yazmaya başlayın veya tıklayıp seçin..."
                       value={quickAppCustomerSearch}
+                      onFocus={() => setShowCustomerDropdown(true)}
                       onChange={(e) => {
-                        const val = e.target.value;
-                        setQuickAppCustomerSearch(val);
-                        
-                        // Find if the typed/selected string matches a customer
-                        const selected = customers.find(c => `${c.unvan} (${c.adres.substring(0, 25)}...)` === val);
-                        if (selected) {
-                          setQuickAppCustomerId(selected.id);
-                        } else {
-                          setQuickAppCustomerId('');
-                        }
+                        setQuickAppCustomerSearch(e.target.value);
+                        setQuickAppCustomerId('');
+                        setShowCustomerDropdown(true);
                       }}
                       required
                     />
-                    <datalist id="customers-list">
-                      {[...customers]
-                        .sort((a,b) => a.unvan.localeCompare(b.unvan))
-                        .map(c => (
-                        <option key={c.id} value={`${c.unvan} (${c.adres.substring(0, 25)}...)`} />
-                      ))}
-                    </datalist>
-                    {!quickAppCustomerId && quickAppCustomerSearch && (
+                    {showCustomerDropdown && (
+                      <div style={{
+                        position: 'absolute',
+                        top: '100%',
+                        left: 0,
+                        right: 0,
+                        maxHeight: '200px',
+                        overflowY: 'auto',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: '0 0 8px 8px',
+                        zIndex: 50,
+                        boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                      }}>
+                        {[...customers]
+                          .sort((a,b) => a.unvan.localeCompare(b.unvan))
+                          .filter(c => c.unvan.toLowerCase().includes(quickAppCustomerSearch.toLowerCase()))
+                          .map(c => (
+                            <div 
+                              key={c.id}
+                              style={{ padding: '10px', cursor: 'pointer', borderBottom: '1px solid rgba(255,255,255,0.05)', color: 'var(--text-primary)' }}
+                              onClick={() => {
+                                setQuickAppCustomerId(c.id);
+                                setQuickAppCustomerSearch(`${c.unvan} (${c.adres.substring(0, 25)}...)`);
+                                setShowCustomerDropdown(false);
+                              }}
+                              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(16, 185, 129, 0.1)'}
+                              onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                            >
+                              <div style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>{c.unvan}</div>
+                              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{c.adres.substring(0, 40)}...</div>
+                            </div>
+                        ))}
+                        {[...customers].filter(c => c.unvan.toLowerCase().includes(quickAppCustomerSearch.toLowerCase())).length === 0 && (
+                          <div style={{ padding: '10px', color: '#94A3B8', fontSize: '0.85rem', textAlign: 'center' }}>
+                            Eşleşen müşteri bulunamadı.
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    {!quickAppCustomerId && quickAppCustomerSearch && !showCustomerDropdown && (
                       <div style={{ fontSize: '0.75rem', color: '#EF4444', marginTop: '4px' }}>
                         * Lütfen listeden geçerli bir müşteri seçin.
                       </div>
