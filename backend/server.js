@@ -613,13 +613,53 @@ app.get('/api/appointments/suggest-date', auth, async (req, res) => {
 
 // 2) Yeni Randevu Ekle
 app.post('/api/appointments', auth, async (req, res) => {
-  const { customerId, date, time, notes, pests, uygulama_tipi } = req.body;
+  const { customerId, date, time, notes, pests, uygulama_tipi, recurring } = req.body;
   if (!customerId || !date) {
     return res.status(400).json({ error: 'Musteri ve tarih zorunludur.' });
   }
   try {
-    const a = await db.addAppointment(customerId, date, time, notes, pests, uygulama_tipi);
-    res.status(201).json(a);
+    if (recurring && recurring.enabled && recurring.days && recurring.days.length > 0 && recurring.endDate) {
+      // Periyodik randevu mantığı
+      const dayMap = {
+        'Pazar': 0, 'Pazartesi': 1, 'Salı': 2, 'Çarşamba': 3, 'Perşembe': 4, 'Cuma': 5, 'Cumartesi': 6
+      };
+      const targetDays = recurring.days.map(d => dayMap[d]).filter(d => d !== undefined);
+      
+      const dates = [];
+      let current = new Date(date);
+      const end = new Date(recurring.endDate);
+      
+      // En fazla 1 yıl ileriye gitmesini sağla (sonsuz döngü koruması)
+      const maxEnd = new Date(date);
+      maxEnd.setFullYear(maxEnd.getFullYear() + 1);
+      const actualEnd = end < maxEnd ? end : maxEnd;
+      
+      while (current <= actualEnd) {
+        if (targetDays.includes(current.getDay())) {
+          const yyyy = current.getFullYear();
+          const mm = String(current.getMonth() + 1).padStart(2, '0');
+          const dd = String(current.getDate()).padStart(2, '0');
+          dates.push(`${yyyy}-${mm}-${dd}`);
+        }
+        current.setDate(current.getDate() + 1);
+      }
+      
+      if (dates.length === 0) dates.push(date); // Fallback
+      
+      const seriesId = 'SR-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+      const createdAppointments = [];
+      
+      for (const d of dates) {
+        const a = await db.addAppointment(customerId, d, time, notes, pests, uygulama_tipi, seriesId);
+        createdAppointments.push(a);
+      }
+      
+      res.status(201).json(createdAppointments[0]); // Return the first one to satisfy frontend
+    } else {
+      // Tekil randevu mantığı
+      const a = await db.addAppointment(customerId, date, time, notes, pests, uygulama_tipi, null);
+      res.status(201).json(a);
+    }
   } catch (e) {
     res.status(500).json({ error: 'Randevu olusturulamadi.' });
   }

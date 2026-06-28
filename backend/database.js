@@ -264,7 +264,7 @@ const db = {
     });
   },
 
-  addAppointment: async (customerId, date, time, notes, pests, uygulama_tipi) => {
+  addAppointment: async (customerId, date, time, notes, pests, uygulama_tipi, seriesId = null) => {
     const d = await loadData();
     if (!d.appointments) d.appointments = [];
     const newId = d.appointments.length > 0 ? Math.max(...d.appointments.map(a => a.id)) + 1 : 1;
@@ -919,7 +919,8 @@ const db = {
       customerName,
       month,
       note,
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(),
+      series_id: seriesId
     };
     d.extraJobs.push(job);
     await saveData(d);

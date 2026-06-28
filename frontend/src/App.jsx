@@ -1025,6 +1025,14 @@ export default function App() {
   const [newAppNotes, setNewAppNotes] = useState('');
   const [newAppPests, setNewAppPests] = useState([]);
   const [newAppCustomPest, setNewAppCustomPest] = useState('');
+  const [newAppIsRecurring, setNewAppIsRecurring] = useState(false);
+  const [newAppRecurringDays, setNewAppRecurringDays] = useState([]);
+  const [newAppRecurringEndDate, setNewAppRecurringEndDate] = useState('');
+
+  const [quickAppIsRecurring, setQuickAppIsRecurring] = useState(false);
+  const [quickAppRecurringDays, setQuickAppRecurringDays] = useState([]);
+  const [quickAppRecurringEndDate, setQuickAppRecurringEndDate] = useState('');
+
 
   // Erteleme Modalı State
   const [showRescheduleModal, setShowRescheduleModal] = useState(false);
@@ -1804,7 +1812,12 @@ export default function App() {
           time: newAppTime,
           notes: newAppNotes,
           pests: finalPests,
-          uygulama_tipi: Array.isArray(newAppUygulamaTipi) ? newAppUygulamaTipi.join(', ') : newAppUygulamaTipi
+          uygulama_tipi: Array.isArray(newAppUygulamaTipi) ? newAppUygulamaTipi.join(', ') : newAppUygulamaTipi,
+          recurring: {
+            enabled: newAppIsRecurring,
+            days: newAppRecurringDays,
+            endDate: newAppRecurringEndDate
+          }
         })
       });
       const data = await response.json();
@@ -1885,7 +1898,12 @@ export default function App() {
           time: quickAppTime,
           notes: quickAppNotes,
           pests: finalPests,
-          uygulama_tipi: quickAppUygulamaTipi.join(', ')
+          uygulama_tipi: quickAppUygulamaTipi.join(', '),
+          recurring: {
+            enabled: quickAppIsRecurring,
+            days: quickAppRecurringDays,
+            endDate: quickAppRecurringEndDate
+          }
         })
       });
       const data = await response.json();
