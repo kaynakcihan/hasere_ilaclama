@@ -3404,25 +3404,22 @@ export default function App() {
                       <div style={{ display: 'flex', flexDirection: 'column' }}>
                         <span className="customer-badge">{c.uygulama_tipi}</span>
                         
-                        {/* Sadece ADMİN düzenleyebilir ve silebilir */}
-                        {user.role === 'admin' && (
-                          <div className="customer-actions">
+                        <div className="customer-actions" style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
                             <button 
-                              className="action-btn" 
-                              title="Düzenle"
+                              className="btn-small" 
+                              style={{ background: '#3B82F6', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '4px' }}
                               onClick={(e) => { e.stopPropagation(); openEditModal(c); }}
                             >
-                              <IconEdit />
+                              <IconEdit /> Düzenle
                             </button>
                             <button 
-                              className="action-btn action-btn-danger" 
-                              title="Sil"
+                              className="btn-small" 
+                              style={{ background: 'rgba(239, 68, 68, 0.15)', color: '#EF4444', border: '1px solid rgba(239, 68, 68, 0.3)', padding: '6px 12px', borderRadius: '6px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '4px' }}
                               onClick={(e) => { e.stopPropagation(); handleDeleteCustomer(c.id); }}
                             >
-                              <IconTrash />
+                              <IconTrash /> Sil
                             </button>
                           </div>
-                        )}
                       </div>
                     </div>
                   ))}
