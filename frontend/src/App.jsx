@@ -981,6 +981,7 @@ export default function App() {
   const [selectedCustomerForDetail, setSelectedCustomerForDetail] = useState(null);
   const [dailyAppointments, setDailyAppointments] = useState([]);
   const [customerAppointments, setCustomerAppointments] = useState([]);
+  const [expandedAppId, setExpandedAppId] = useState(null);
   
   const getTodayString = () => {
     const today = new Date();
@@ -3518,10 +3519,12 @@ export default function App() {
               </div>
             ) : (
               <div className="card-grid">
-                {dailyAppointments.map((app) => (
-                  <div key={app.id} className="compact-job-card">
+                {dailyAppointments.map((app) => {
+                  const isExpanded = expandedAppId === app.id;
+                  return (
+                  <div key={app.id} className="compact-job-card" style={{ transition: 'all 0.3s ease' }}>
                     <div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '6px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
                           <span style={{ background: 'rgba(16,185,129,0.12)', color: 'var(--accent)', padding: '3px 8px', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 'bold', display: 'inline-flex', alignItems: 'center', gap: '4px', width: 'fit-content' }}>
                             <IconClock /> {app.time || '12:00'}
@@ -3535,121 +3538,135 @@ export default function App() {
                         </span>
                       </div>
 
-                      <div className="customer-unvan" style={{ margin: '0 0 10px 0', fontSize: '1.15rem' }}>{app.customer.unvan}</div>
-
-                      {app.notes && (
-                        <div style={{ background: 'rgba(0,0,0,0.15)', padding: '10px 14px', borderRadius: '12px', fontSize: '0.8rem', color: '#CBD5E1', marginBottom: '12px', borderLeft: '3px solid var(--accent)' }}>
-                          {app.notes}
-                        </div>
-                      )}
-
-                      <div className="customer-info-row">
-                        <IconPhone />
-                        <span>Telefon: <strong>{app.customer.telefon}</strong></span>
+                      <div 
+                        className="customer-unvan" 
+                        style={{ margin: '0 0 10px 0', fontSize: '1.15rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+                        onClick={() => setExpandedAppId(isExpanded ? null : app.id)}
+                      >
+                        <span style={{ color: 'var(--text-primary)' }}>{app.customer.unvan}</span>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--accent)', background: 'rgba(16, 185, 129, 0.1)', padding: '2px 8px', borderRadius: '12px' }}>
+                          {isExpanded ? '▲ Gizle' : '▼ Detay ve İşlemler'}
+                        </span>
                       </div>
-
-                      <div className="customer-info-row">
+                      
+                      <div className="customer-info-row" style={{ marginBottom: isExpanded ? '15px' : '0', borderBottom: isExpanded ? '1px solid rgba(255,255,255,0.05)' : 'none', paddingBottom: isExpanded ? '10px' : '0' }}>
                         <IconMapPin />
                         <span>Adres: {app.customer.adres}</span>
                       </div>
-                      
-                      <div className="customer-info-row">
-                        <IconFileText />
-                        <span>Tip: <strong>{app.customer.uygulama_tipi}</strong></span>
-                      </div>
-                    </div>
 
-                    {/* Görev Eylemleri */}
-                    <div className="job-card-actions" style={{ marginTop: '10px', paddingTop: '10px', display: 'flex', gap: '5px' }}>
-                      {app.status === 'pending' ? (
-                        <>
-                          {app.date > new Date().toISOString().split('T')[0] ? (
-                            <div 
-                              className="btn-small"
-                              style={{ 
-                                opacity: 0.8, 
-                                cursor: 'not-allowed', 
-                                background: '#334155', 
-                                color: '#e2e8f0', 
-                                border: '1px solid #475569',
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '6px',
-                                padding: '6px 12px',
-                                borderRadius: '8px',
-                                fontSize: '0.8rem',
-                                fontWeight: '500'
-                              }}
-                              title="İşin tarihi gelmeden (o gün gelmeden) resmi evrak doldurulamaz."
-                            >
-                              🔒 Tarihi Bekleniyor
+                      {/* GENİŞLETİLMİŞ İÇERİK (DETAYLAR VE BUTONLAR) */}
+                      {isExpanded && (
+                        <div style={{ animation: 'fadeIn 0.3s' }}>
+                          {app.notes && (
+                            <div style={{ background: 'rgba(0,0,0,0.15)', padding: '10px 14px', borderRadius: '12px', fontSize: '0.8rem', color: '#CBD5E1', marginBottom: '12px', borderLeft: '3px solid var(--accent)' }}>
+                              {app.notes}
                             </div>
-                          ) : (
-                            <button 
-                              className="btn-small btn-action-success"
-                              onClick={() => openEk1ModalHelper(app)}
-                            >
-                              <IconFileText /> EK-1 Gönder
-                            </button>
                           )}
+
+                          <div className="customer-info-row">
+                            <IconPhone />
+                            <span>Telefon: <strong>{app.customer.telefon}</strong></span>
+                          </div>
                           
-                          <button 
-                            className="btn-small btn-action-warning"
-                            onClick={() => {
-                              setSelectedAppForReschedule(app);
-                              setRescheduleDate(selectedDate);
-                              setRescheduleTime(app.time || '12:00');
-                              setRescheduleReason('Hava Muhalefeti (Yağmur/Rüzgar)');
-                              setShowRescheduleModal(true);
-                            }}
-                          >
-                            ⏰ Ertele
-                          </button>
+                          <div className="customer-info-row">
+                            <IconFileText />
+                            <span>Tip: <strong>{app.customer.uygulama_tipi}</strong></span>
+                          </div>
 
-                          <button 
-                            className="btn-small btn-action-info"
-                            onClick={handleFaturaKesClick}
-                          >
-                            🧾 Fatura Kes
-                          </button>
+                          {/* Görev Eylemleri */}
+                          <div className="job-card-actions" style={{ marginTop: '15px', paddingTop: '15px', borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
+                            {app.status === 'pending' ? (
+                              <>
+                                {app.date > new Date().toISOString().split('T')[0] ? (
+                                  <div 
+                                    className="btn-small"
+                                    style={{ 
+                                      opacity: 0.8, 
+                                      cursor: 'not-allowed', 
+                                      background: '#334155', 
+                                      color: '#e2e8f0', 
+                                      border: '1px solid #475569',
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      gap: '6px',
+                                      padding: '6px 12px',
+                                      borderRadius: '8px',
+                                      fontSize: '0.8rem',
+                                      fontWeight: '500'
+                                    }}
+                                    title="İşin tarihi gelmeden (o gün gelmeden) resmi evrak doldurulamaz."
+                                  >
+                                    🔒 Tarihi Bekleniyor
+                                  </div>
+                                ) : (
+                                  <button 
+                                    className="btn-small btn-action-success"
+                                    onClick={() => openEk1ModalHelper(app)}
+                                  >
+                                    <IconFileText /> EK-1 Gönder
+                                  </button>
+                                )}
+                                
+                                <button 
+                                  className="btn-small btn-action-warning"
+                                  onClick={() => {
+                                    setSelectedAppForReschedule(app);
+                                    setRescheduleDate(selectedDate);
+                                    setRescheduleTime(app.time || '12:00');
+                                    setRescheduleReason('Hava Muhalefeti (Yağmur/Rüzgar)');
+                                    setShowRescheduleModal(true);
+                                  }}
+                                >
+                                  ⏰ Ertele
+                                </button>
 
-                          <button 
-                            className="btn-small"
-                            onClick={() => handleCancelAppointment(app.id)}
-                            style={{ padding: '10px 16px', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.25)', color: 'var(--error)', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
-                          >
-                            <IconTrash /> İşi İptal Et
-                          </button>
-                        </>
-                      ) : (
-                        <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem', color: 'var(--text-muted)', paddingTop: '5px' }}>
-                          <span>✓ Görev başarıyla tamamlandı.</span>
-                          {app.ek1_id && (
-                            <button 
-                              className="btn-small btn-secondary"
-                              onClick={async () => {
-                                try {
-                                  const response = await fetch(`${API_URL}/api/ek1/customer/${app.customer_id}`, {
-                                    headers: { 'Authorization': `Bearer ${token}` }
-                                  });
-                                  const docs = await response.json();
-                                  const doc = docs.find(d => d.id === app.ek1_id);
-                                  if (doc) setViewingEk1Doc(doc);
-                                  else setError('Evrak detayı bulunamadı.');
-                                } catch (err) {
-                                  setError('Yüklenemedi.');
-                                }
-                              }}
-                              style={{ padding: '6px 12px' }}
-                            >
-                              Evrağı Gör
-                            </button>
-                          )}
+                                <button 
+                                  className="btn-small btn-action-info"
+                                  onClick={handleFaturaKesClick}
+                                >
+                                  🧾 Fatura Kes
+                                </button>
+
+                                <button 
+                                  className="btn-small"
+                                  onClick={() => handleCancelAppointment(app.id)}
+                                  style={{ padding: '10px 16px', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.25)', color: 'var(--error)', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                                >
+                                  <IconTrash /> İşi İptal Et
+                                </button>
+                              </>
+                            ) : (
+                              <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                                <span>✓ Görev başarıyla tamamlandı.</span>
+                                {app.ek1_id && (
+                                  <button 
+                                    className="btn-small btn-secondary"
+                                    onClick={async () => {
+                                      try {
+                                        const response = await fetch(`${API_URL}/api/ek1/customer/${app.customer_id}`, {
+                                          headers: { 'Authorization': `Bearer ${token}` }
+                                        });
+                                        const docs = await response.json();
+                                        const doc = docs.find(d => d.id === app.ek1_id);
+                                        if (doc) setViewingEk1Doc(doc);
+                                        else setError('Evrak detayı bulunamadı.');
+                                      } catch (err) {
+                                        setError('Yüklenemedi.');
+                                      }
+                                    }}
+                                    style={{ padding: '6px 12px' }}
+                                  >
+                                    Evrağı Gör
+                                  </button>
+                                )}
+                              </div>
+                            )}
+                          </div>
                         </div>
                       )}
                     </div>
                   </div>
-                ))}
+                );})}
               </div>
             )}
           </div>
