@@ -3563,9 +3563,20 @@ export default function App() {
                             </div>
                           )}
 
-                          <div className="customer-info-row">
-                            <IconPhone />
-                            <span>Telefon: <strong>{app.customer.telefon}</strong></span>
+                          <div className="customer-info-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <IconPhone />
+                              <span>Telefon: <strong>{app.customer.telefon}</strong></span>
+                            </div>
+                            {app.customer.telefon && (
+                              <a 
+                                href={`tel:${app.customer.telefon.replace(/[^0-9+]/g, '')}`}
+                                className="btn-small"
+                                style={{ background: '#25D366', color: '#fff', border: 'none', padding: '4px 10px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 'bold', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                              >
+                                📞 Ara
+                              </a>
+                            )}
                           </div>
                           
                           <div className="customer-info-row">
