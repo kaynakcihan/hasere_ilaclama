@@ -274,8 +274,8 @@ const db = {
       date,
       time: time || '12:00',
       notes: notes || '',
-      pests: pests || [], // Seçilen haşereler listesi
-      
+      pests: pests || [],
+      uygulama_tipi: uygulama_tipi || 'Kapalı Alan',
       status: 'pending', // pending, completed
       ek1_id: null,
       created_at: new Date().toISOString()
