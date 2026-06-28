@@ -272,7 +272,7 @@ const db = {
       id: newId,
       customer_id: parseInt(customerId),
       date,
-      time: time || '12:00',
+      time: (time !== undefined && time !== null) ? time : '12:00',
       notes: notes || '',
       pests: pests || [],
       uygulama_tipi: uygulama_tipi || 'Kapalı Alan',

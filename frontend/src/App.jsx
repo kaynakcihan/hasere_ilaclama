@@ -3606,15 +3606,25 @@ export default function App() {
               </div>
             ) : (
               <div className="card-grid">
-                {dailyAppointments.map((app) => {
-                  const isExpanded = expandedAppId === app.id;
+                {/* SAATLİ İŞLER BÖLÜMÜ */}
+
+                    <div style={{ marginBottom: '30px' }}>
+                      <h3 style={{ fontSize: '1.1rem', color: '#F8FAFC', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '8px' }}>
+                        <IconClock /> Kilitli / Sabit Saatli İşler
+                      </h3>
+                      <div className="card-grid">
+                        {dailyAppointments
+                          .filter(app => app.time && app.time.trim() !== '')
+                          .sort((a, b) => a.time.localeCompare(b.time))
+                          .map((app) => {
+const isExpanded = expandedAppId === app.id;
                   return (
                   <div key={app.id} className="compact-job-card" style={{ transition: 'all 0.3s ease' }}>
                     <div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
                           <span style={{ background: 'rgba(16,185,129,0.12)', color: 'var(--accent)', padding: '3px 8px', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 'bold', display: 'inline-flex', alignItems: 'center', gap: '4px', width: 'fit-content' }}>
-                            <IconClock /> {app.time || '12:00'}
+                            <IconClock /> {app.time && app.time.trim() !== '' ? app.time : <span style={{fontSize:'0.75rem', fontWeight:'bold', letterSpacing:'1px'}}>ESNEK</span>}
                           </span>
                           <WeatherBadge date={app.date} address={app.customer?.adres} konum={app.customer?.konum} />
                         </div>
@@ -3771,7 +3781,202 @@ export default function App() {
                       )}
                     </div>
                   </div>
-                );})}
+                );})
+                        }
+                      </div>
+                    </div>
+        
+        {/* ESNEK İŞLER BÖLÜMÜ */}
+
+                    <div style={{ marginBottom: '20px' }}>
+                      <h3 style={{ fontSize: '1.1rem', color: 'var(--accent)', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(16,185,129,0.2)', paddingBottom: '8px' }}>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg> 
+                        Esnek / Yol Üstü İşleri (Körfez Sırasına Göre)
+                      </h3>
+                      <div className="card-grid">
+                        {dailyAppointments
+                          .filter(app => !app.time || app.time.trim() === '')
+                          .sort((a, b) => {
+                            const korfezIndex = { 'küçükkuyu': 1, 'altınoluk': 2, 'güre': 3, 'akçay': 4, 'zeytinli': 5, 'edremit': 6, 'kadıköy': 7, 'havran': 8, 'burhaniye': 9, 'öğretmenler': 9, 'ören': 9, 'iskele': 9, 'pelitköy': 10, 'gömeç': 11, 'karaağaç': 12, 'ayvalık': 13, 'sarımsaklı': 13, 'cunda': 13, 'altınova': 14 };
+                            const getScore = (customer) => {
+                              if (!customer) return 99;
+                              const str = ((customer.adres || '') + ' ' + (customer.ilce || '') + ' ' + (customer.il || '')).toLowerCase();
+                              for (const key in korfezIndex) {
+                                if (str.includes(key)) return korfezIndex[key];
+                              }
+                              return 50; 
+                            };
+                            return getScore(a.customer) - getScore(b.customer);
+                          })
+                          .map((app) => {
+const isExpanded = expandedAppId === app.id;
+                  return (
+                  <div key={app.id} className="compact-job-card" style={{ transition: 'all 0.3s ease' }}>
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                          <span style={{ background: 'rgba(16,185,129,0.12)', color: 'var(--accent)', padding: '3px 8px', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 'bold', display: 'inline-flex', alignItems: 'center', gap: '4px', width: 'fit-content' }}>
+                            <IconClock /> {app.time && app.time.trim() !== '' ? app.time : <span style={{fontSize:'0.75rem', fontWeight:'bold', letterSpacing:'1px'}}>ESNEK</span>}
+                          </span>
+                          <WeatherBadge date={app.date} address={app.customer?.adres} konum={app.customer?.konum} />
+                        </div>
+                        <span className={`customer-badge ${
+                          app.status === 'completed' ? 'badge-completed' : 'badge-pending'
+                        }`} style={{ margin: 0, padding: '3px 8px', fontSize: '0.75rem' }}>
+                          {app.status === 'completed' ? 'Tamamlandı' : 'Bekliyor'}
+                        </span>
+                      </div>
+
+                      <div 
+                        className="customer-unvan" 
+                        style={{ margin: '0 0 10px 0', fontSize: '1.15rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+                        onClick={() => setExpandedAppId(isExpanded ? null : app.id)}
+                      >
+                        <span style={{ color: 'var(--text-primary)' }}>{app.customer.unvan}</span>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--accent)', background: 'rgba(16, 185, 129, 0.1)', padding: '2px 8px', borderRadius: '12px' }}>
+                          {isExpanded ? '▲ Gizle' : '▼ Detay ve İşlemler'}
+                        </span>
+                      </div>
+                      
+                      <div className="customer-info-row" style={{ marginBottom: isExpanded ? '15px' : '0', borderBottom: isExpanded ? '1px solid rgba(255,255,255,0.05)' : 'none', paddingBottom: isExpanded ? '10px' : '0' }}>
+                        <IconMapPin />
+                        <span>Adres: {app.customer.adres}</span>
+                      </div>
+
+                      {/* GENİŞLETİLMİŞ İÇERİK (DETAYLAR VE BUTONLAR) */}
+                      {isExpanded && (
+                        <div style={{ animation: 'fadeIn 0.3s' }}>
+                          {app.notes && (
+                            <div style={{ background: 'rgba(0,0,0,0.15)', padding: '10px 14px', borderRadius: '12px', fontSize: '0.8rem', color: '#CBD5E1', marginBottom: '12px', borderLeft: '3px solid var(--accent)' }}>
+                              {app.notes}
+                            </div>
+                          )}
+
+                          <div className="customer-info-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <IconPhone />
+                              <span>Telefon: <strong>{app.customer.telefon}</strong></span>
+                            </div>
+                            {app.customer.telefon && (
+                              <a 
+                                href={`tel:${(String(app.customer.telefon || '')).replace(/[^0-9+]/g, '')}`}
+                                className="btn-small"
+                                style={{ background: '#25D366', color: '#fff', border: 'none', padding: '4px 10px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 'bold', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                              >
+                                📞 Ara
+                              </a>
+                            )}
+                          </div>
+                          
+                          <div className="customer-info-row">
+                            <IconFileText />
+                            <span>Uygulama Alanı: <strong>{app.uygulama_tipi || 'Kapalı Alan'}</strong></span>
+                          </div>
+                          
+                          {app.pests && app.pests.length > 0 && (
+                            <div className="customer-info-row" style={{ color: '#F59E0B' }}>
+                              <IconAlertCircle />
+                              <span>Hedef Zararlılar: <strong>{Array.isArray(app.pests) ? app.pests.join(', ') : app.pests}</strong></span>
+                            </div>
+                          )}
+
+                          {/* Görev Eylemleri */}
+                          <div className="job-card-actions" style={{ marginTop: '15px', paddingTop: '15px', borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
+                            {app.status === 'pending' ? (
+                              <>
+                                {app.date > new Date().toISOString().split('T')[0] ? (
+                                  <div 
+                                    className="btn-small"
+                                    style={{ 
+                                      opacity: 0.8, 
+                                      cursor: 'not-allowed', 
+                                      background: '#334155', 
+                                      color: '#e2e8f0', 
+                                      border: '1px solid #475569',
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      gap: '6px',
+                                      padding: '6px 12px',
+                                      borderRadius: '8px',
+                                      fontSize: '0.8rem',
+                                      fontWeight: '500'
+                                    }}
+                                    title="İşin tarihi gelmeden (o gün gelmeden) resmi evrak doldurulamaz."
+                                  >
+                                    🔒 Tarihi Bekleniyor
+                                  </div>
+                                ) : (
+                                  <button 
+                                    className="btn-small btn-action-success"
+                                    onClick={() => openEk1ModalHelper(app)}
+                                  >
+                                    <IconFileText /> EK-1 Gönder
+                                  </button>
+                                )}
+                                
+                                <button 
+                                  className="btn-small btn-action-warning"
+                                  onClick={() => {
+                                    setSelectedAppForReschedule(app);
+                                    setRescheduleDate(selectedDate);
+                                    setRescheduleTime(app.time || '12:00');
+                                    setRescheduleReason('Hava Muhalefeti (Yağmur/Rüzgar)');
+                                    setShowRescheduleModal(true);
+                                  }}
+                                >
+                                  ⏰ Ertele
+                                </button>
+
+                                <button 
+                                  className="btn-small btn-action-info"
+                                  onClick={handleFaturaKesClick}
+                                >
+                                  🧾 Fatura Kes
+                                </button>
+
+                                <button 
+                                  className="btn-small"
+                                  onClick={() => handleCancelAppointment(app.id)}
+                                  style={{ padding: '10px 16px', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.25)', color: 'var(--error)', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                                >
+                                  <IconTrash /> İşi İptal Et
+                                </button>
+                              </>
+                            ) : (
+                              <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                                <span>✓ Görev başarıyla tamamlandı.</span>
+                                {app.ek1_id && (
+                                  <button 
+                                    className="btn-small btn-secondary"
+                                    onClick={async () => {
+                                      try {
+                                        const response = await fetch(`${API_URL}/api/ek1/customer/${app.customer_id}`, {
+                                          headers: { 'Authorization': `Bearer ${token}` }
+                                        });
+                                        const docs = await response.json();
+                                        const doc = docs.find(d => d.id === app.ek1_id);
+                                        if (doc) setViewingEk1Doc(doc);
+                                        else setError('Evrak detayı bulunamadı.');
+                                      } catch (err) {
+                                        setError('Yüklenemedi.');
+                                      }
+                                    }}
+                                    style={{ padding: '6px 12px' }}
+                                  >
+                                    Evrağı Gör
+                                  </button>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );})
+                        }
+                      </div>
+                    </div>
               </div>
             )}
           </div>

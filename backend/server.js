@@ -618,6 +618,38 @@ app.post('/api/appointments', auth, async (req, res) => {
     return res.status(400).json({ error: 'Musteri ve tarih zorunludur.' });
   }
   try {
+    // --- ÇİFT KAYIT KONTROLÜ (DUPLICATE CHECK) ---
+    // Aynı ünvan ve telefona sahip bir şube/müşteri aynı güne iki kez eklenmemeli.
+    const allCustomers = await db.getCustomers();
+    const allAppointments = await db.getAppointments();
+    
+    const targetCustomer = allCustomers.find(c => c.id === parseInt(customerId));
+    if (targetCustomer) {
+      // Tekil veya periyodik olması fark etmez, oluşturulacak tarihleri önceden hesaplayıp kontrol edelim.
+      // Eğer periyodikse listeyi, değilse tek bir tarihi kontrol edeceğiz. Ama basitlik için
+      // Backend'e gelen "date" (ilk tarih) için sıkı kontrol yapalım veya tüm dates listesi için yapalım.
+      // Periyodik randevuda ilk tarih için uyarı vermek yeterli olur.
+      
+      const targetUnvan = targetCustomer.unvan.toLowerCase().trim();
+      const targetPhone = (targetCustomer.telefon || '').trim();
+      
+      // Check if there is ANY appointment on the requested primary 'date' for this Unvan + Phone combination
+      const duplicateExists = allAppointments.some(app => {
+        if (app.date === date && app.status !== 'cancelled') {
+          const appCust = allCustomers.find(c => c.id === parseInt(app.customer_id));
+          if (appCust) {
+            return appCust.unvan.toLowerCase().trim() === targetUnvan && (appCust.telefon || '').trim() === targetPhone;
+          }
+        }
+        return false;
+      });
+      
+      if (duplicateExists) {
+        return res.status(400).json({ error: 'Bu müşterinin (Ünvan ve Telefon eşleşmesi) bu tarihte zaten bir randevusu var!' });
+      }
+    }
+    // ---------------------------------------------
+
     if (recurring && recurring.enabled && recurring.days && recurring.days.length > 0 && recurring.endDate) {
       // Periyodik randevu mantığı
       const dayMap = {
