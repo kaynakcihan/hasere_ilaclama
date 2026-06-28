@@ -496,14 +496,12 @@ app.get('/api/customers', auth, async (req, res) => {
 });
 
 app.post('/api/customers', auth, adminOnly, async (req, res) => {
-  const { unvan, vergi_no, telefon, adres, uygulama_tipi, email, konum } = req.body;
+  const { unvan, vergi_no, telefon, adres, email, konum } = req.body;
   if (!unvan) return res.status(400).json({ error: 'Lütfen müşteri / işletme adını giriniz.' });
   if (!konum) return res.status(400).json({ error: 'Lütfen il/ilçe (konum) bilgisini giriniz.' });
   if (!telefon || telefon.length !== 11 || !/^\d+$/.test(telefon)) return res.status(400).json({ error: 'Lütfen 11 haneli telefon numarasını eksiksiz ve sadece rakam olarak giriniz. (Örn: 05551234567)' });
   if (!adres) return res.status(400).json({ error: 'Lütfen açık adres bilgisini giriniz.' });
-  if (!uygulama_tipi) return res.status(400).json({ error: 'Lütfen uygulama tipi seçiniz.' });
-  
-  // Mükerrer Kayıt Kontrolü
+    // Mükerrer Kayıt Kontrolü
   const allCustomers = await db.getAllCustomers();
   const existing = allCustomers.find(c => c.unvan.toLowerCase().trim() === unvan.toLowerCase().trim());
   if (existing) {
@@ -514,17 +512,17 @@ app.post('/api/customers', auth, adminOnly, async (req, res) => {
     }
   }
 
-  try { res.status(201).json(await db.addCustomer(unvan, vergi_no, telefon, adres, uygulama_tipi, email, konum)); }
+  try { res.status(201).json(await db.addCustomer(unvan, vergi_no, telefon, adres, email, konum)); }
   catch (e) { res.status(500).json({ error: 'Musteri eklenemedi.' }); }
 });
 
 app.put('/api/customers/:id', auth, adminOnly, async (req, res) => {
-  const { unvan, vergi_no, telefon, adres, uygulama_tipi, email, konum } = req.body;
-  if (!unvan || !telefon || !adres || !uygulama_tipi || !konum) return res.status(400).json({ error: 'Zorunlu alanlar eksik.' });
+  const { unvan, vergi_no, telefon, adres, email, konum } = req.body;
+  if (!unvan || !telefon || !adres || !konum) return res.status(400).json({ error: 'Zorunlu alanlar eksik.' });
   try {
     const c = await db.getCustomerById(req.params.id);
     if (!c) return res.status(404).json({ error: 'Musteri bulunamadi.' });
-    res.json(await db.updateCustomer(req.params.id, unvan, vergi_no, telefon, adres, uygulama_tipi, email, konum));
+    res.json(await db.updateCustomer(req.params.id, unvan, vergi_no, telefon, adres, email, konum));
   } catch (e) { res.status(500).json({ error: 'Guncellenemedi.' }); }
 });
 
