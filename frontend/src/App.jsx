@@ -1046,6 +1046,7 @@ export default function App() {
   // Hızlı Randevu Modalı State (Günlük Plandan)
   const [showQuickAppModal, setShowQuickAppModal] = useState(false);
   const [quickAppCustomerId, setQuickAppCustomerId] = useState('');
+  const [quickAppCustomerSearch, setQuickAppCustomerSearch] = useState('');
   const [quickAppDate, setQuickAppDate] = useState('');
   const [quickAppTime, setQuickAppTime] = useState('12:00');
   const [quickAppNotes, setQuickAppNotes] = useState('');
@@ -3491,7 +3492,8 @@ export default function App() {
                     setQuickAppDate(selectedDate);
                     setQuickAppTime('12:00');
                     setQuickAppNotes('');
-                    setQuickAppCustomerId(customers.length > 0 ? customers[0].id : '');
+                    setQuickAppCustomerId('');
+                    setQuickAppCustomerSearch('');
                     setShowQuickAppModal(true);
                   }}
                   style={{ width: 'auto', padding: '6px 12px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '4px' }}
@@ -5253,25 +5255,37 @@ export default function App() {
               </div>
 
               <div className="input-group">
-                <label className="input-label">Müşteri Seçin *</label>
+                <label className="input-label">Müşteri Seçin (Ara) *</label>
                 {customers.length === 0 ? (
                   <div style={{ color: '#F59E0B', fontSize: '0.85rem', marginTop: '5px' }}>
                     Sistemde kayıtlı müşteri bulunamadı. Lütfen önce "Müşteriler" sekmesinden yeni bir müşteri ekleyin.
                   </div>
                 ) : (
-                  <select 
-                    required
-                    className="form-input"
-                    value={quickAppCustomerId}
-                    onChange={(e) => setQuickAppCustomerId(e.target.value)}
-                  >
-                    <option value="" disabled>-- Lütfen Bir Müşteri Seçin --</option>
-                    {customers.map(c => (
-                      <option key={c.id} value={c.id}>
-                        {c.unvan} ({c.adres.substring(0, 25)}...)
-                      </option>
-                    ))}
-                  </select>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="Müşteri Ara (Filtrelemek için yazın)..."
+                      value={quickAppCustomerSearch}
+                      onChange={(e) => setQuickAppCustomerSearch(e.target.value)}
+                    />
+                    <select 
+                      required
+                      className="form-input"
+                      value={quickAppCustomerId}
+                      onChange={(e) => setQuickAppCustomerId(e.target.value)}
+                    >
+                      <option value="" disabled>-- Lütfen Listeden Bir Müşteri Seçin --</option>
+                      {[...customers]
+                        .sort((a,b) => a.unvan.localeCompare(b.unvan))
+                        .filter(c => quickAppCustomerSearch.length < 3 || c.unvan.toLowerCase().includes(quickAppCustomerSearch.toLowerCase()))
+                        .map(c => (
+                        <option key={c.id} value={c.id}>
+                          {c.unvan} ({c.adres.substring(0, 25)}...)
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 )}
               </div>
 
