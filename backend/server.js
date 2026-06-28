@@ -644,7 +644,24 @@ app.post('/api/appointments', auth, async (req, res) => {
         current.setDate(current.getDate() + 1);
       }
       
-      if (dates.length === 0) dates.push(date); // Fallback
+            if (dates.length === 0) dates.push(date); // Fallback
+
+      // Aylık limit filtresi
+      if (recurring.monthlyLimit && parseInt(recurring.monthlyLimit) > 0) {
+        const limit = parseInt(recurring.monthlyLimit);
+        const filteredDates = [];
+        const monthCounts = {};
+        for (const d of dates) {
+            const yyyyMm = d.substring(0, 7);
+            if (!monthCounts[yyyyMm]) monthCounts[yyyyMm] = 0;
+            if (monthCounts[yyyyMm] < limit) {
+                filteredDates.push(d);
+                monthCounts[yyyyMm]++;
+            }
+        }
+        dates.length = 0; // Clear original array
+        dates.push(...filteredDates);
+      }
       
       const seriesId = 'SR-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
       const createdAppointments = [];

@@ -1028,10 +1028,12 @@ export default function App() {
   const [newAppIsRecurring, setNewAppIsRecurring] = useState(false);
   const [newAppRecurringDays, setNewAppRecurringDays] = useState([]);
   const [newAppRecurringEndDate, setNewAppRecurringEndDate] = useState('');
+  const [newAppMonthlyLimit, setNewAppMonthlyLimit] = useState('');
 
   const [quickAppIsRecurring, setQuickAppIsRecurring] = useState(false);
   const [quickAppRecurringDays, setQuickAppRecurringDays] = useState([]);
   const [quickAppRecurringEndDate, setQuickAppRecurringEndDate] = useState('');
+  const [quickAppMonthlyLimit, setQuickAppMonthlyLimit] = useState('');
 
 
   // Erteleme Modalı State
@@ -1816,7 +1818,8 @@ export default function App() {
           recurring: {
             enabled: newAppIsRecurring,
             days: newAppRecurringDays,
-            endDate: newAppRecurringEndDate
+            endDate: newAppRecurringEndDate,
+            monthlyLimit: newAppMonthlyLimit
           }
         })
       });
@@ -1902,7 +1905,8 @@ export default function App() {
           recurring: {
             enabled: quickAppIsRecurring,
             days: quickAppRecurringDays,
-            endDate: quickAppRecurringEndDate
+            endDate: quickAppRecurringEndDate,
+            monthlyLimit: quickAppMonthlyLimit
           }
         })
       });
@@ -3314,6 +3318,18 @@ export default function App() {
                         value={newAppRecurringEndDate}
                         onChange={(e) => setNewAppRecurringEndDate(e.target.value)}
                         required={newAppIsRecurring}
+                      />
+                    </div>
+                    <div className="input-group">
+                      <label className="input-label">Aylık Maksimum Ziyaret Sayısı (Opsiyonel)</label>
+                      <input 
+                        type="number"
+                        min="1"
+                        max="31"
+                        placeholder="Örn: 4"
+                        className="form-input"
+                        value={newAppMonthlyLimit}
+                        onChange={(e) => setNewAppMonthlyLimit(e.target.value)}
                       />
                     </div>
                   </div>
@@ -5596,6 +5612,18 @@ export default function App() {
                         value={quickAppRecurringEndDate}
                         onChange={(e) => setQuickAppRecurringEndDate(e.target.value)}
                         required={quickAppIsRecurring}
+                      />
+                    </div>
+                    <div className="input-group">
+                      <label className="input-label">Aylık Maksimum Ziyaret Sayısı (Opsiyonel)</label>
+                      <input 
+                        type="number"
+                        min="1"
+                        max="31"
+                        placeholder="Örn: 4"
+                        className="form-input"
+                        value={quickAppMonthlyLimit}
+                        onChange={(e) => setQuickAppMonthlyLimit(e.target.value)}
                       />
                     </div>
                   </div>
