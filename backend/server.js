@@ -622,8 +622,8 @@ app.post('/api/appointments', auth, async (req, res) => {
 
     
     // --- ÇİFT KAYIT KONTROLÜ (DUPLICATE CHECK) ---
-    const allCustomers = await db.getCustomers();
-    const allAppointments = await db.getAppointments();
+    const allCustomers = await db.getAllCustomers();
+    const allAppointments = await db.getAllAppointments();
     
     const targetCustomer = allCustomers.find(c => c.id === parseInt(customerId));
     if (targetCustomer) {
