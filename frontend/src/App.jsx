@@ -3168,201 +3168,6 @@ export default function App() {
                     )}
                   </div>
 
-          }}
-        >
-          <IconDashboard />
-          <span>Özet Rapor</span>
-        </button>
-
-        {user && user.role === 'admin' && (
-          <button 
-            className={`nav-item ${activeTab === 'expenses' ? 'active' : ''}`}
-            onClick={() => {
-              setActiveTab('expenses');
-            }}
-          >
-            <IconExpenses />
-            <span>Finans & Giderler</span>
-          </button>
-        )}
-
-        <button 
-          className={`nav-item ${activeTab === 'pest_control' ? 'active' : ''}`}
-          onClick={() => {
-            setActiveTab('pest_control');
-          }}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: '18px', height: '18px' }}>
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-          </svg>
-          <span>Pest Kontrol</span>
-        </button>
-
-        <div style={{ flexGrow: 1 }}></div>
-
-        <button 
-          className={`nav-item ${activeTab === 'settings' ? 'active' : ''}`}
-          style={{ marginTop: 'auto', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '15px' }}
-          onClick={() => {
-            setActiveTab('settings');
-          }}
-        >
-          <IconSettings />
-          <span>Ayarlar</span>
-        </button>
-      </nav>
-
-       {/* Hata ve Başarı Popupları */}
-       <div style={{ position: 'fixed', top: '25px', left: '280px', right: '20px', zIndex: '9999' }}>
-         {error && <div className="toast toast-error">{error}</div>}
-         {success && <div className="toast toast-success">{success}</div>}
-       </div>
-
-      {/* 3. Ana İçerik Alanı (Main Panels) */}
-      <main className="main-content">
-        
-        {/* TEMA 5: PEST KONTROL (KROKİ VE İSTASYON TAKİBİ) SEKME GÖRÜNÜMÜ */}
-        {activeTab === 'pest_control' && (
-          <PestControlPanel customers={customers} token={token} user={user} />
-        )}
-
-        {/* AYARLAR SEKME GÖRÜNÜMÜ */}
-        {activeTab === 'settings' && (
-          <div>
-            <h1 className="section-title">Ayarlar ⚙️</h1>
-            <p className="section-subtitle">Sistem tercihlerinizi ve bildirim ayarlarınızı buradan yönetebilirsiniz.</p>
-            
-            <div style={{ background: '#1E293B', padding: '30px', borderRadius: '24px', border: '1px solid #334155', maxWidth: '600px', marginTop: '20px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div>
-                  <h3 style={{ margin: '0 0 5px 0', color: '#F8FAFC', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <IconBell /> Sistem Bildirimleri
-                  </h3>
-                  <p style={{ margin: 0, fontSize: '0.85rem', color: '#94A3B8' }}>
-                    Yeni iş atamaları, görev tamamlanma ve erteleme durumlarında bildirim almayı {notificationsEnabled ? 'kapatın' : 'açın'}.
-                  </p>
-                </div>
-                
-                {/* Modern Toggle Switch */}
-                <label style={{ position: 'relative', display: 'inline-block', width: '56px', height: '32px' }}>
-                  <input 
-                    type="checkbox" 
-                    checked={notificationsEnabled}
-                    onChange={(e) => updatePreferences(e.target.checked)}
-                    style={{ opacity: 0, width: 0, height: 0 }}
-                  />
-                  <span style={{
-                    position: 'absolute',
-                    cursor: 'pointer',
-                    top: 0, left: 0, right: 0, bottom: 0,
-                    backgroundColor: notificationsEnabled ? 'var(--primary)' : '#475569',
-                    transition: '.4s',
-                    borderRadius: '34px',
-                    boxShadow: notificationsEnabled ? '0 0 10px rgba(56, 189, 248, 0.4)' : 'none'
-                  }}>
-                    <span style={{
-                      position: 'absolute',
-                      content: '""',
-                      height: '24px',
-                      width: '24px',
-                      left: notificationsEnabled ? '28px' : '4px',
-                      bottom: '4px',
-                      backgroundColor: 'white',
-                      transition: '.4s',
-                      borderRadius: '50%',
-                      boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
-                    }} />
-                  </span>
-                </label>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* TEMA 1: MÜŞTERİLER SEKME GÖRÜNÜMÜ */}
-        {activeTab === 'customers' && (
-          selectedCustomerForDetail ? (
-            /* ==========================================
-               MÜŞTERİ DETAY GÖRÜNÜMÜ (MÜŞTERİNİN KENDİ SEKME ALANI)
-               ========================================== */
-            <div>
-              <button className="back-btn" onClick={() => setSelectedCustomerForDetail(null)}>
-                👤 Müşteri Portföyüne Geri Dön
-              </button>
-              
-              <h1 className="section-title">{selectedCustomerForDetail.unvan}</h1>
-              <p className="section-subtitle">Müşteri detay kartı ve geçmiş biyosidal işlem takipleri.</p>
-
-              <div className="detail-grid">
-                {/* Sol Sütun: Müşteri Künyesi ve EK-1 Arşivi */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                  
-                  {/* Bilgi Kartı */}
-                  <div className="detail-card">
-                    <h2 className="detail-title" style={{ borderBottom: '1px solid var(--border-color)', paddingBottom: '10px' }}><IconUsers /> Müşteri Bilgileri</h2>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '15px' }}>
-                      {selectedCustomerForDetail.vergi_no && (
-                        <div className="customer-info-row">
-                          <IconFile />
-                          <span>Vergi/TC No: <strong>{selectedCustomerForDetail.vergi_no}</strong></span>
-                        </div>
-                      )}
-                      <div className="customer-info-row">
-                        <IconPhone />
-                        <span>Telefon: <strong>{selectedCustomerForDetail.telefon}</strong></span>
-                      </div>
-                      <div className="customer-info-row">
-                        <IconMapPin />
-                        <span>Adres: {selectedCustomerForDetail.adres}</span>
-                      </div>
-                      
-                    </div>
-                  </div>
-
-                  {/* EK-1 Belgeleri Geçmişi */}
-                  <div className="detail-card">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px' }}>
-                      <h2 className="detail-title" style={{ margin: 0, padding: 0, border: 'none' }}><IconFileText /> EK-1 Evrak Geçmişi</h2>
-                      <button 
-                        className="btn btn-primary btn-small"
-                        onClick={() => openEk1ModalHelper()}
-                        style={{ width: 'auto' }}
-                      >
-                        <IconPlus /> Yeni EK-1 Oluştur
-                      </button>
-                    </div>
-                    
-                    {ek1Docs.length === 0 ? (
-                      <div style={{ textAlign: 'center', padding: '40px 10px', color: '#94A3B8', background: 'rgba(255,255,255,0.02)', borderRadius: '16px', border: '1px dashed var(--border-color)' }}>
-                        <IconFileText />
-                        <p style={{ fontSize: '0.85rem', marginTop: '10px' }}>Bu müşteriye ait geçmiş dijital EK-1 evrakı bulunamadı.</p>
-                      </div>
-                    ) : (
-                      <div className="document-archive-list">
-                        {ek1Docs.map(doc => (
-                          <div key={doc.id} className="document-archive-item">
-                            <div className="archive-meta">
-                              <span>Evrak No: #EK1-{doc.id}</span>
-                              <span>{new Date(doc.created_at).toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
-                            </div>
-                            <div className="archive-pest">📄 {doc.hedef_hasere} İlaçlaması</div>
-                            <div className="archive-details">
-                              <div>Kullanılan Ürün: <strong>{doc.biyosidal_urun}</strong> ({doc.aktif_madde})</div>
-                              <div>Yöntem & Miktar: {doc.uygulama_yontemi} - {doc.urun_miktari}</div>
-                              <div>Uygulayan Teknisyen: {doc.teknisyen_adi}</div>
-                            </div>
-                            {doc.signature_image && (
-                              <div className="archive-signature-preview">
-                                <span>Müşteri Imzası:</span>
-                                <img src={doc.signature_image} alt="İmza" className="archive-signature-img" />
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
                 </div>
 
                 {/* Sağ Sütun: Randevu Oluşturma Aracı ve Geçmiş Planlar */}
@@ -3397,36 +3202,11 @@ export default function App() {
                           />
                         </div>
                       </div>
-
-                      <div className="input-group">
-                        <label className="input-label">Uygulama Alanı Tipi *</label>
-                        <select 
-                          className="form-input"
-                          required
-                          value={newAppUygulamaTipi || 'Kapalı Alan'}
-                          onChange={(e) => setNewAppUygulamaTipi(e.target.value)}
-                        >
-                          <option value="Kapalı Alan">Kapalı Alan (Mesken, İşyeri vb.)</option>
-                          <option value="Açık Alan">Açık Alan (Bahçe, Site İçi vb.)</option>
-                        </select>
-                      </div>
                       
                       <div className="input-group">
                         <label className="input-label">Hedef Zararlılar (İsteğe Bağlı)</label>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '8px', padding: '10px', background: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
-                          {['Kemirgen', 'Yürüyen Haşere', 'Uçan Haşere'].map(pest => (
-                            <label key={pest} style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', cursor: 'pointer', color: 'var(--text-primary)' }}>
-                              <input 
-                                type="checkbox"
-                                checked={newAppPests.includes(pest)}
-                                onChange={(e) => {
-                                  if (e.target.checked) setNewAppPests([...newAppPests, pest]);
-                                  else setNewAppPests(newAppPests.filter(p => p !== pest));
-                                }}
-                              /> {pest}
-                            </label>
-                          ))}
-                          {pestOptionsList.filter(p => !['Kemirgen', 'Yürüyen Haşere', 'Uçan Haşere'].includes(p)).map(pest => (
+                          {pestOptionsList.map(pest => (
                             <label key={pest} style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', cursor: 'pointer', color: 'var(--text-primary)' }}>
                               <input 
                                 type="checkbox"
@@ -5581,6 +5361,12 @@ export default function App() {
                     )}
                   </div>
                 )}
+              </div>
+
+              <div className="form-grid-2col">
+                <div>
+                  <label className="input-label">Uygulama Tarihi *</label>
+                  <input 
                     type="date" 
                     required 
                     className="form-input" 
