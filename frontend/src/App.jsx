@@ -1803,7 +1803,8 @@ export default function App() {
           date: finalDate,
           time: newAppTime,
           notes: newAppNotes,
-          pests: finalPests
+          pests: finalPests,
+          uygulama_tipi: Array.isArray(newAppUygulamaTipi) ? newAppUygulamaTipi.join(', ') : newAppUygulamaTipi
         })
       });
       const data = await response.json();
