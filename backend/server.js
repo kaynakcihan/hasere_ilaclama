@@ -630,7 +630,7 @@ app.post('/api/appointments', auth, async (req, res) => {
       // Backend'e gelen "date" (ilk tarih) için sıkı kontrol yapalım veya tüm dates listesi için yapalım.
       // Periyodik randevuda ilk tarih için uyarı vermek yeterli olur.
       
-      const targetUnvan = targetCustomer.unvan.toLowerCase().trim();
+      const targetUnvan = (targetCustomer.unvan || '').toLowerCase().trim();
       const targetPhone = (targetCustomer.telefon || '').trim();
       
       // Check if there is ANY appointment on the requested primary 'date' for this Unvan + Phone combination
@@ -638,7 +638,9 @@ app.post('/api/appointments', auth, async (req, res) => {
         if (app.date === date && app.status !== 'cancelled') {
           const appCust = allCustomers.find(c => c.id === parseInt(app.customer_id));
           if (appCust) {
-            return appCust.unvan.toLowerCase().trim() === targetUnvan && (appCust.telefon || '').trim() === targetPhone;
+            const appUnvan = (appCust.unvan || '').toLowerCase().trim();
+            const appPhone = (appCust.telefon || '').trim();
+            return appUnvan !== '' && appUnvan === targetUnvan && appPhone === targetPhone;
           }
         }
         return false;
