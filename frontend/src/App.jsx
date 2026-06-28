@@ -3203,25 +3203,11 @@ export default function App() {
                         </div>
                       </div>
                       
-                      <div className="input-group">
-                        <label className="input-label">Uygulama Alanı Tipi *</label>
-                        <div style={{ display: 'flex', gap: '15px', padding: '10px', background: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
-                          {['Kapalı Alan', 'Açık Alan'].map(tip => (
-                            <label key={tip} style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', cursor: 'pointer', color: 'var(--text-primary)' }}>
-                              <input 
-                                type="checkbox"
-                                checked={newAppUygulamaTipi.includes(tip)}
-                                onChange={(e) => {
-                                  if (e.target.checked) setNewAppUygulamaTipi([...newAppUygulamaTipi, tip]);
-                                  else setNewAppUygulamaTipi(newAppUygulamaTipi.filter(t => t !== tip));
-                                }}
-                              /> {tip}
-                            </label>
-                          ))}
-                        </div>
-                      </div>
+                      
 
-                      <div className="input-group">
+                      
+
+              <div className="input-group">
                 <label className="input-label">Uygulama Alanı Tipi *</label>
                 <div style={{ display: 'flex', gap: '15px', padding: '10px', background: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
                   {['Kapalı Alan', 'Açık Alan'].map(tip => (
@@ -5020,17 +5006,24 @@ export default function App() {
                     />
                   </div>
 
-                  <div className="input-group">
+                  
+
+              <div className="input-group">
                 <label className="input-label">Uygulama Alanı Tipi *</label>
-                <select 
-                  className="form-input"
-                  required
-                  value={quickAppUygulamaTipi || 'Kapalı Alan'}
-                  onChange={(e) => setQuickAppUygulamaTipi(e.target.value)}
-                >
-                  <option value="Kapalı Alan">Kapalı Alan (Mesken, İşyeri vb.)</option>
-                  <option value="Açık Alan">Açık Alan (Bahçe, Site İçi vb.)</option>
-                </select>
+                <div style={{ display: 'flex', gap: '15px', padding: '10px', background: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                  {['Kapalı Alan', 'Açık Alan'].map(tip => (
+                    <label key={tip} style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', cursor: 'pointer', color: 'var(--text-primary)' }}>
+                      <input 
+                        type="checkbox"
+                        checked={quickAppUygulamaTipi.includes(tip)}
+                        onChange={(e) => {
+                          if (e.target.checked) setQuickAppUygulamaTipi([...quickAppUygulamaTipi, tip]);
+                          else setQuickAppUygulamaTipi(quickAppUygulamaTipi.filter(t => t !== tip));
+                        }}
+                      /> {tip}
+                    </label>
+                  ))}
+                </div>
               </div>
 
               <div className="input-group">
@@ -5436,17 +5429,24 @@ export default function App() {
                 </div>
               </div>
 
+              
+
               <div className="input-group">
                 <label className="input-label">Uygulama Alanı Tipi *</label>
-                <select 
-                  className="form-input"
-                  required
-                  value={quickAppUygulamaTipi || 'Kapalı Alan'}
-                  onChange={(e) => setQuickAppUygulamaTipi(e.target.value)}
-                >
-                  <option value="Kapalı Alan">Kapalı Alan (Mesken, İşyeri vb.)</option>
-                  <option value="Açık Alan">Açık Alan (Bahçe, Site İçi vb.)</option>
-                </select>
+                <div style={{ display: 'flex', gap: '15px', padding: '10px', background: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                  {['Kapalı Alan', 'Açık Alan'].map(tip => (
+                    <label key={tip} style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', cursor: 'pointer', color: 'var(--text-primary)' }}>
+                      <input 
+                        type="checkbox"
+                        checked={quickAppUygulamaTipi.includes(tip)}
+                        onChange={(e) => {
+                          if (e.target.checked) setQuickAppUygulamaTipi([...quickAppUygulamaTipi, tip]);
+                          else setQuickAppUygulamaTipi(quickAppUygulamaTipi.filter(t => t !== tip));
+                        }}
+                      /> {tip}
+                    </label>
+                  ))}
+                </div>
               </div>
 
               <div className="input-group">
