@@ -3568,7 +3568,7 @@ export default function App() {
                             </div>
                             {app.customer.telefon && (
                               <a 
-                                href={`tel:${app.customer.telefon.replace(/[^0-9+]/g, '')}`}
+                                href={`tel:${(String(app.customer.telefon || '')).replace(/[^0-9+]/g, '')}`}
                                 className="btn-small"
                                 style={{ background: '#25D366', color: '#fff', border: 'none', padding: '4px 10px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 'bold', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
                               >
@@ -4273,8 +4273,8 @@ export default function App() {
                 <select 
                   className="form-input" 
                   required 
-                  value={formData.konum ? formData.konum.split(' / ')[1] || '' : ''}
-                  onChange={(e) => setFormData({ ...formData, konum: `${formData.konum ? formData.konum.split(' / ')[0] || '' : ''} / ${e.target.value}` })}
+                  value={String(formData.konum || '') ? formData.konum.split(' / ')[1] || '' : ''}
+                  onChange={(e) => setFormData({ ...formData, konum: `${String(formData.konum || '') ? formData.konum.split(' / ')[0] || '' : ''} / ${e.target.value}` })}
                 >
                   <option value="" disabled>-- İl Seçin --</option>
                   {cityNames.map(city => (
@@ -4287,8 +4287,8 @@ export default function App() {
                 <select 
                   className="form-input" 
                   required 
-                  value={formData.konum ? formData.konum.split(' / ')[0] || '' : ''}
-                  onChange={(e) => setFormData({ ...formData, konum: `${e.target.value} / ${formData.konum ? formData.konum.split(' / ')[1] || '' : ''}` })}
+                  value={String(formData.konum || '') ? formData.konum.split(' / ')[0] || '' : ''}
+                  onChange={(e) => setFormData({ ...formData, konum: `${e.target.value} / ${String(formData.konum || '') ? formData.konum.split(' / ')[1] || '' : ''}` })}
                   disabled={!formData.konum || !formData.konum.split(' / ')[1]}
                 >
                   <option value="" disabled>-- İlçe Seçin --</option>
@@ -4399,8 +4399,8 @@ export default function App() {
                 <select 
                   className="form-input" 
                   required 
-                  value={formData.konum ? formData.konum.split(' / ')[1] || '' : ''}
-                  onChange={(e) => setFormData({ ...formData, konum: `${formData.konum ? formData.konum.split(' / ')[0] || '' : ''} / ${e.target.value}` })}
+                  value={String(formData.konum || '') ? formData.konum.split(' / ')[1] || '' : ''}
+                  onChange={(e) => setFormData({ ...formData, konum: `${String(formData.konum || '') ? formData.konum.split(' / ')[0] || '' : ''} / ${e.target.value}` })}
                 >
                   <option value="" disabled>-- İl Seçin --</option>
                   {cityNames.map(city => (
@@ -4413,8 +4413,8 @@ export default function App() {
                 <select 
                   className="form-input" 
                   required 
-                  value={formData.konum ? formData.konum.split(' / ')[0] || '' : ''}
-                  onChange={(e) => setFormData({ ...formData, konum: `${e.target.value} / ${formData.konum ? formData.konum.split(' / ')[1] || '' : ''}` })}
+                  value={String(formData.konum || '') ? formData.konum.split(' / ')[0] || '' : ''}
+                  onChange={(e) => setFormData({ ...formData, konum: `${e.target.value} / ${String(formData.konum || '') ? formData.konum.split(' / ')[1] || '' : ''}` })}
                   disabled={!formData.konum || !formData.konum.split(' / ')[1]}
                 >
                   <option value="" disabled>-- İlçe Seçin --</option>
@@ -5362,14 +5362,14 @@ export default function App() {
                               style={{ padding: '10px', cursor: 'pointer', borderBottom: '1px solid rgba(255,255,255,0.05)', color: 'var(--text-primary)' }}
                               onClick={() => {
                                 setQuickAppCustomerId(c.id);
-                                setQuickAppCustomerSearch(`${c.unvan} (${c.adres.substring(0, 25)}...)`);
+                                setQuickAppCustomerSearch(`${c.unvan} (${(c.adres || '').substring(0, 25)}...)`);
                                 setShowCustomerDropdown(false);
                               }}
                               onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(16, 185, 129, 0.1)'}
                               onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                             >
                               <div style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>{c.unvan}</div>
-                              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{c.adres.substring(0, 40)}...</div>
+                              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{(c.adres || '').substring(0, 40)}...</div>
                             </div>
                         ))}
                         {[...customers].filter(c => c.unvan.toLowerCase().includes(quickAppCustomerSearch.toLowerCase())).length === 0 && (
