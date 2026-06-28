@@ -3599,7 +3599,7 @@ export default function App() {
                           
                           {app.pests && app.pests.length > 0 && (
                             <div className="customer-info-row" style={{ color: '#F59E0B' }}>
-                              <IconAlertTriangle />
+                              <IconAlertCircle />
                               <span>Hedef Zararlılar: <strong>{Array.isArray(app.pests) ? app.pests.join(', ') : app.pests}</strong></span>
                             </div>
                           )}
