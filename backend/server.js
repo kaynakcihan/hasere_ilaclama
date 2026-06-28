@@ -625,6 +625,7 @@ app.post('/api/appointments', auth, async (req, res) => {
     const allCustomers = await db.getAllCustomers();
     const allAppointments = await db.getAllAppointments();
     
+    // 1. Aynı müşteriye aynı gün randevu engeli
     const targetCustomer = allCustomers.find(c => c.id === parseInt(customerId));
     if (targetCustomer) {
       const targetUnvan = (targetCustomer.unvan || '').toLowerCase().trim();
@@ -644,6 +645,16 @@ app.post('/api/appointments', auth, async (req, res) => {
       
       if (duplicateExists) {
         return res.status(400).json({ error: 'Bu müşterinin (Ünvan ve Telefon eşleşmesi) bu tarihte zaten bir randevusu var!' });
+      }
+    }
+    
+    // 2. Aynı gün aynı saate başka randevu engeli (Esnek saatler hariç)
+    if (time && time.trim() !== '') {
+      const timeConflictExists = allAppointments.some(app => {
+        return app.date === date && app.time === time && app.status !== 'cancelled';
+      });
+      if (timeConflictExists) {
+        return res.status(400).json({ error: `Bu tarihte saat ${time} için zaten başka bir randevu kayıtlı! Lütfen farklı bir saat seçin veya esnek (boş) bırakın.` });
       }
     }
     // ---------------------------------------------
@@ -729,6 +740,15 @@ app.post('/api/appointments/:id/reschedule', auth, async (req, res) => {
   const { newDate, newTime, reason } = req.body;
   if (!newDate) return res.status(400).json({ error: 'Yeni tarih gerekli.' });
   try {
+    if (newTime && newTime.trim() !== '') {
+      const allAppointments = await db.getAllAppointments();
+      const timeConflictExists = allAppointments.some(app => {
+        return app.date === newDate && app.time === newTime && app.status !== 'cancelled' && app.id !== parseInt(req.params.id);
+      });
+      if (timeConflictExists) {
+        return res.status(400).json({ error: `Bu tarihte saat ${newTime} için zaten başka bir randevu kayıtlı!` });
+      }
+    }
     const updated = await db.rescheduleAppointment(req.params.id, newDate, newTime, reason);
     if (!updated) return res.status(404).json({ error: 'Randevu bulunamadi.' });
     res.json(updated);
