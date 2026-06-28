@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import turkeyCities from './cities.json';
 
 // Dinamik API adresi belirleme (Telefondan yerel ağa bağlanırken sorun yaşamamak için)
 const API_URL = 'https://hasere-ilaclama.onrender.com';
@@ -4268,15 +4269,33 @@ export default function App() {
                 />
               </div>
               <div className="input-group">
-                <label className="input-label">Konum (İl / İlçe) *</label>
-                <input 
-                  type="text" 
-                  required
+                <label className="input-label">İl *</label>
+                <select 
                   className="form-input" 
-                  placeholder="Örn: Edremit / Balıkesir"
-                  value={formData.konum}
-                  onChange={(e) => setFormData({ ...formData, konum: e.target.value })}
-                />
+                  required 
+                  value={formData.konum ? formData.konum.split(' / ')[1] || '' : ''}
+                  onChange={(e) => setFormData({ ...formData, konum: `${formData.konum ? formData.konum.split(' / ')[0] || '' : ''} / ${e.target.value}` })}
+                >
+                  <option value="" disabled>-- İl Seçin --</option>
+                  {cityNames.map(city => (
+                    <option key={city} value={city}>{city}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="input-group">
+                <label className="input-label">İlçe *</label>
+                <select 
+                  className="form-input" 
+                  required 
+                  value={formData.konum ? formData.konum.split(' / ')[0] || '' : ''}
+                  onChange={(e) => setFormData({ ...formData, konum: `${e.target.value} / ${formData.konum ? formData.konum.split(' / ')[1] || '' : ''}` })}
+                  disabled={!formData.konum || !formData.konum.split(' / ')[1]}
+                >
+                  <option value="" disabled>-- İlçe Seçin --</option>
+                  {formData.konum && formData.konum.split(' / ')[1] && turkeyCities[formData.konum.split(' / ')[1]] ? turkeyCities[formData.konum.split(' / ')[1]].map(district => (
+                    <option key={district} value={district}>{district}</option>
+                  )) : null}
+                </select>
               </div>
 
 
@@ -4376,15 +4395,33 @@ export default function App() {
                 />
               </div>
               <div className="input-group">
-                <label className="input-label">Konum (İl / İlçe) *</label>
-                <input 
-                  type="text" 
-                  required
+                <label className="input-label">İl *</label>
+                <select 
                   className="form-input" 
-                  placeholder="Örn: Edremit / Balıkesir"
-                  value={formData.konum}
-                  onChange={(e) => setFormData({ ...formData, konum: e.target.value })}
-                />
+                  required 
+                  value={formData.konum ? formData.konum.split(' / ')[1] || '' : ''}
+                  onChange={(e) => setFormData({ ...formData, konum: `${formData.konum ? formData.konum.split(' / ')[0] || '' : ''} / ${e.target.value}` })}
+                >
+                  <option value="" disabled>-- İl Seçin --</option>
+                  {cityNames.map(city => (
+                    <option key={city} value={city}>{city}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="input-group">
+                <label className="input-label">İlçe *</label>
+                <select 
+                  className="form-input" 
+                  required 
+                  value={formData.konum ? formData.konum.split(' / ')[0] || '' : ''}
+                  onChange={(e) => setFormData({ ...formData, konum: `${e.target.value} / ${formData.konum ? formData.konum.split(' / ')[1] || '' : ''}` })}
+                  disabled={!formData.konum || !formData.konum.split(' / ')[1]}
+                >
+                  <option value="" disabled>-- İlçe Seçin --</option>
+                  {formData.konum && formData.konum.split(' / ')[1] && turkeyCities[formData.konum.split(' / ')[1]] ? turkeyCities[formData.konum.split(' / ')[1]].map(district => (
+                    <option key={district} value={district}>{district}</option>
+                  )) : null}
+                </select>
               </div>
 
 
