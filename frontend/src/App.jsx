@@ -939,18 +939,15 @@ const VoiceButton = ({ onResult }) => {
     recognition.maxAlternatives = 1;
 
     setIsListening(true);
-    alert("🎙️ Mikrofon açıldı! Şimdi konuşun...");
 
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
-      alert("✅ Algılanan metin: " + transcript);
       if (transcript && transcript.trim()) {
         onResultRef.current(transcript.trim());
       }
     };
 
     recognition.onerror = (event) => {
-      alert("❌ Ses hatası: " + event.error);
       setIsListening(false);
     };
 
@@ -961,7 +958,6 @@ const VoiceButton = ({ onResult }) => {
     try {
       recognition.start();
     } catch (err) {
-      alert("❌ Başlatma hatası: " + err.message);
       setIsListening(false);
     }
   };
