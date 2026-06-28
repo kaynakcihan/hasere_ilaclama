@@ -3797,7 +3797,7 @@ const isExpanded = expandedAppId === app.id;
                         {dailyAppointments
                           .filter(app => !app.time || app.time.trim() === '')
                           .sort((a, b) => {
-                            const korfezIndex = { 'küçükkuyu': 1, 'altınoluk': 2, 'güre': 3, 'akçay': 4, 'zeytinli': 5, 'edremit': 6, 'kadıköy': 7, 'havran': 8, 'burhaniye': 9, 'öğretmenler': 9, 'ören': 9, 'iskele': 9, 'pelitköy': 10, 'gömeç': 11, 'karaağaç': 12, 'ayvalık': 13, 'sarımsaklı': 13, 'cunda': 13, 'altınova': 14 };
+                            const korfezIndex = { 'edremit': 1, 'kadıköy': 2, 'zeytinli': 3, 'akçay': 4, 'güre': 5, 'altınoluk': 6, 'küçükkuyu': 7, 'havran': 8, 'burhaniye': 9, 'öğretmenler': 9, 'ören': 9, 'iskele': 9, 'pelitköy': 10, 'gömeç': 11, 'karaağaç': 12, 'ayvalık': 13, 'sarımsaklı': 13, 'cunda': 13, 'altınova': 14 };
                             const getScore = (customer) => {
                               if (!customer) return 99;
                               const str = ((customer.adres || '') + ' ' + (customer.konum || '')).toLowerCase();
