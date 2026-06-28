@@ -784,7 +784,7 @@ function PestControlPanel({ customers, token, user }) {
                 </select>
               </div>
               <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-                <button type="submit" className="btn btn-primary">Kaydet</button>
+                <button type="submit" className="btn btn-primary" disabled={isSubmittingApp}>{isSubmittingApp ? 'Kaydediliyor...' : 'Kaydet'}</button>
                 <button type="button" className="btn btn-secondary" onClick={() => setShowAddStationModal(false)}>İptal</button>
               </div>
             </form>
@@ -968,6 +968,7 @@ export default function App() {
   // Giriş Formu (Google olana kadar kolay test için)
   const [emailInput, setEmailInput] = useState(''); // Varsayılan kolay test e-postası kaldırıldı, placeholder kullanılıyor
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isSubmittingApp, setIsSubmittingApp] = useState(false);
 
   // Form Alanları (Müşteri Ekleme/Düzenleme)
   const [formData, setFormData] = useState({
@@ -5837,7 +5838,7 @@ const isExpanded = expandedAppId === app.id;
 <button type="button" className="btn btn-secondary" onClick={() => setShowQuickAppModal(false)}>
                   Vazgeç
                 </button>
-                <button type="submit" className="btn btn-primary" style={{ width: 'auto', marginLeft: 'auto' }} disabled={customers.length === 0}>
+                <button type="submit" className="btn btn-primary" style={{ width: 'auto', marginLeft: 'auto' }} disabled={customers.length === 0 || isSubmittingApp}>
                   Randevuyu Kaydet
                 </button>
               </div>
