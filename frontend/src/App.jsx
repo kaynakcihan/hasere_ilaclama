@@ -919,27 +919,36 @@ const VoiceButton = ({ onResult }) => {
   const [isListening, setIsListening] = useState(false);
   const startListening = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-      alert("Tarayıcınız ses tanıma özelliğini desteklemiyor.");
+      alert("Tarayıcınız ses tanıma özelliğini desteklemiyor. Lütfen Chrome kullanın.");
       return;
     }
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
     recognition.lang = 'tr-TR';
+    recognition.continuous = true;
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
 
-    recognition.onstart = () => setIsListening(true);
+    setIsListening(true);
     recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      onResult(transcript);
+      let fullTranscript = '';
+      for (let i = 0; i < event.results.length; i++) {
+        if (event.results[i].isFinal) {
+          fullTranscript += event.results[i][0].transcript + ' ';
+        }
+      }
+      if (fullTranscript.trim()) {
+        onResult(fullTranscript.trim());
+      }
     };
     recognition.onerror = (event) => {
-      console.error(event.error);
+      console.error('Speech error:', event.error);
       setIsListening(false);
     };
     recognition.onend = () => setIsListening(false);
-    recognition.start();
+    try { recognition.start(); } catch(err) { setIsListening(false); }
   };
 
   return (
@@ -5551,8 +5560,7 @@ const isExpanded = expandedAppId === app.id;
                       4. Yapılan Uygulamalar ve Görüşler
                     
                         <VoiceButton onResult={(text) => {
-                          const current = ek1FormData.uygulamalar_ve_gorusler || '';
-                          setEk1FormData({ ...ek1FormData, uygulamalar_ve_gorusler: current ? current + ' ' + text : text });
+                          setEk1FormData(prev => ({ ...prev, uygulamalar_ve_gorusler: (prev.uygulamalar_ve_gorusler || '') ? prev.uygulamalar_ve_gorusler + ' ' + text : text }));
                         }} /></h4>
                     <button 
                       type="button" 
@@ -5579,8 +5587,7 @@ const isExpanded = expandedAppId === app.id;
                     5. Güvenlik Önlemleri ve Öneriler *
                   
                       <VoiceButton onResult={(text) => {
-                        const current = ek1FormData.oneriler || '';
-                        setEk1FormData({ ...ek1FormData, oneriler: current ? current + ' ' + text : text });
+                        setEk1FormData(prev => ({ ...prev, oneriler: (prev.oneriler || '') ? prev.oneriler + ' ' + text : text }));
                       }} /></h4>
                   <textarea 
                     className="form-input" 
