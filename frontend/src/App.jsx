@@ -5261,30 +5261,38 @@ export default function App() {
                     Sistemde kayıtlı müşteri bulunamadı. Lütfen önce "Müşteriler" sekmesinden yeni bir müşteri ekleyin.
                   </div>
                 ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div>
                     <input
-                      type="text"
+                      list="customers-list"
                       className="form-input"
-                      placeholder="Müşteri Ara (Filtrelemek için yazın)..."
+                      placeholder="Müşteri adını yazmaya başlayın veya listeden seçin..."
                       value={quickAppCustomerSearch}
-                      onChange={(e) => setQuickAppCustomerSearch(e.target.value)}
-                    />
-                    <select 
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setQuickAppCustomerSearch(val);
+                        
+                        // Find if the typed/selected string matches a customer
+                        const selected = customers.find(c => `${c.unvan} (${c.adres.substring(0, 25)}...)` === val);
+                        if (selected) {
+                          setQuickAppCustomerId(selected.id);
+                        } else {
+                          setQuickAppCustomerId('');
+                        }
+                      }}
                       required
-                      className="form-input"
-                      value={quickAppCustomerId}
-                      onChange={(e) => setQuickAppCustomerId(e.target.value)}
-                    >
-                      <option value="" disabled>-- Lütfen Listeden Bir Müşteri Seçin --</option>
+                    />
+                    <datalist id="customers-list">
                       {[...customers]
                         .sort((a,b) => a.unvan.localeCompare(b.unvan))
-                        .filter(c => quickAppCustomerSearch.length < 3 || c.unvan.toLowerCase().includes(quickAppCustomerSearch.toLowerCase()))
                         .map(c => (
-                        <option key={c.id} value={c.id}>
-                          {c.unvan} ({c.adres.substring(0, 25)}...)
-                        </option>
+                        <option key={c.id} value={`${c.unvan} (${c.adres.substring(0, 25)}...)`} />
                       ))}
-                    </select>
+                    </datalist>
+                    {!quickAppCustomerId && quickAppCustomerSearch && (
+                      <div style={{ fontSize: '0.75rem', color: '#EF4444', marginTop: '4px' }}>
+                        * Lütfen listeden geçerli bir müşteri seçin.
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
